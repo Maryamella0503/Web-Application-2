@@ -242,13 +242,6 @@ def send_crime_summary():
 
 scheduler.add_job(send_crime_summary, 'cron', hour=8)
 
-def send_weekly_summary():
-    users = User.query.filter_by(summary_preference='weekly').all()
-    # Fetch crimes from the past week
-    # ...
-
-scheduler.add_job(send_weekly_summary, 'cron', day_of_week='sun', hour=8)
-
 # Add at the bottom of views.py
 import logging
 from app import create_app
@@ -369,44 +362,6 @@ def get_safety_recommendations(user):
         recommendations.append("Stay alert and report any suspicious activity to the authorities.")
 
     return recommendations or ["No significant crimes found near your location."]
-
-@views.route('/search', methods=['GET', 'POST'])
-@login_required
-def search():
-    search_results = []
-    if request.method == 'POST':
-        crime_type = request.form.get('crime_type')
-        start_date = request.form.get('start_date')
-        end_date = request.form.get('end_date')
-        location = request.form.get('location')
-
-        query = CrimeReport.query
-
-        # Filter by crime type
-        if crime_type:
-            query = query.filter(CrimeReport.title == crime_type)
-
-        # Filter by date range
-        if start_date and end_date:
-            query = query.filter(
-                CrimeReport.date_reported.between(start_date, end_date)
-            )
-
-        # Filter by location proximity (if location is provided)
-        if location:
-            user_coords = tuple(map(float, location.split(',')))
-            crimes = query.all()
-            filtered_results = []
-            for crime in crimes:
-                crime_coords = (crime.latitude, crime.longitude)
-                distance = geodesic(user_coords, crime_coords).km
-                if distance <= current_user.notification_radius:
-                    filtered_results.append(crime)
-            search_results = filtered_results
-        else:
-            search_results = query.all()
-
-    return render_template('search.html', search_results=search_results)
 
 @views.route('/safety-tips', methods=['GET', 'POST'])
 def safety_tips():
