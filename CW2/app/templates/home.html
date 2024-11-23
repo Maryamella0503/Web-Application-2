@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    {% if user and user.is_authenticated %}
+        <div class="text-center my-4">
+            <h2>Welcome to the Crime Detection App, {{ user.username }}!</h2>
+            <button id="panic-btn" class="btn btn-danger my-3">Emergency Alert</button>
+        </div>
+
+        <div id="map-container" class="rounded shadow mb-4" style="height: 500px;">
+            <div id="map" class="rounded" style="height: 100%;"></div>
+        </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const map = L.map('map').setView([51.505, -0.09], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 18,
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
+
+                L.Control.geocoder().addTo(map);
+
+                function getDistance(lat1, lon1, lat2, lon2) {
+                    const R = 6371;
+                    const dLat = (lat2 - lat1) * Math.PI / 180;
+                    const dLon = (lon2 - lon1) * Math.PI / 180;
+                    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+                    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                    return R * c;
+                }
+
+                function fetchCrimeData(userLat, userLon) {
+                    fetch('/api/crime-data')
+                        .then(response => response.json())
+                        .then(data => {
+                            const heatmapData = [];
+                            data.forEach(crime => {
+                                let latitude = parseFloat(crime.latitude);
+                                let longitude = parseFloat(crime.longitude);
+
+                                if (isNaN(latitude) || isNaN(longitude)) {
+                                    console.error('Invalid coordinates:', crime);
+                                    return;
+                                }
+
+                                const distance = getDistance(userLat, userLon, latitude, longitude);
+                                if (distance <= 1) {
+                                    heatmapData.push([latitude, longitude, 1]);
+
+                                    const circleMarker = L.circleMarker([latitude, longitude], {
+                                        radius: 10,
+                                        color: 'transparent',
+                                        fillColor: 'transparent',
+                                        fillOpacity: 0,
+                                    }).addTo(map);
+
+                                    circleMarker.bindPopup(`
+                                        <strong>${crime.title}</strong><br>
+                                        ${crime.description}<br>
+                                        Location: ${crime.location}
+                                    `);
+                                }
+                            });
+
+                            L.heatLayer(heatmapData, {
+                                radius: 25,
+                                blur: 15,
+                                maxZoom: 17
+                            }).addTo(map);
+                        })
+                        .catch(error => {
+                            console.error('Error fetching crime data:', error);
+                            alert('Failed to load crime data.');
+                        });
+                }
+
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        function(position) {
+                            const userLat = position.coords.latitude;
+                            const userLon = position.coords.longitude;
+
+                            map.setView([userLat, userLon], 13);
+
+                            L.marker([userLat, userLon]).addTo(map)
+                                .bindPopup("You are here!")
+                                .openPopup();
+
+                            fetchCrimeData(userLat, userLon);
+                        },
+                        function(error) {
+                            switch (error.code) {
+                                case error.PERMISSION_DENIED:
+                                    alert("User denied the request for Geolocation.");
+                                    break;
+                                case error.POSITION_UNAVAILABLE:
+                                    alert("Location information is unavailable.");
+                                    break;
+                                case error.TIMEOUT:
+                                    alert("The request to get user location timed out.");
+                                    break;
+                                case error.UNKNOWN_ERROR:
+                                    alert("An unknown error occurred.");
+                                    break;
+                            }
+                        }
+                    );
+                } else {
+                    alert("Geolocation is not supported by your browser.");
+                }
+            });
+        </script>
+    {% else %}
+        <div class="text-center my-5">
+            <h1 class="display-4">Welcome to the Crime Detection App</h1>
+            <p class="lead">Track and report crime incidents in your area.</p>
+            <a href="{{ url_for('auth.login') }}" class="btn btn-primary">Log In</a>
+            <a href="{{ url_for('auth.register') }}" class="btn btn-secondary">Register</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

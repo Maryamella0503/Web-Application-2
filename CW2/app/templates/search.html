@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Advanced Crime Search</h2>
+
+    <!-- Search Form -->
+    <form method="POST" class="mb-4">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="crime_type" class="form-label">Crime Type:</label>
+                <select name="crime_type" id="crime_type" class="form-select">
+                    <option value="">--Select--</option>
+                    <option value="Theft">Theft</option>
+                    <option value="Assault">Assault</option>
+                    <option value="Burglary">Burglary</option>
+                    <!-- Add more types as needed -->
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="start_date" class="form-label">Start Date:</label>
+                <input type="date" name="start_date" id="start_date" class="form-control">
+            </div>
+            <div class="col-md-3">
+                <label for="end_date" class="form-label">End Date:</label>
+                <input type="date" name="end_date" id="end_date" class="form-control">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <label for="location" class="form-label">Location (Latitude, Longitude):</label>
+                <input type="text" name="location" id="location" placeholder="e.g., 51.505,-0.09" class="form-control">
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Search</button>
+    </form>
+
+    <!-- Search Results -->
+    {% if search_results %}
+        <h3 class="text-center mb-4">Search Results</h3>
+        <ul class="list-group">
+            {% for crime in search_results %}
+                <li class="list-group-item">
+                    <strong>{{ crime.title }}</strong><br>
+                    <span class="text-muted">Location:</span> {{ crime.location }}<br>
+                    <span class="text-muted">Date:</span> {{ crime.date_reported.strftime('%Y-%m-%d') }}<br>
+                    <span class="text-muted">Description:</span> {{ crime.description }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% elif search_results is not none %}
+        <p class="text-danger text-center mt-4">No results found for the given criteria.</p>
+    {% endif %}
+</div>
+{% endblock %}
