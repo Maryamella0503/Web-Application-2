@@ -27,8 +27,12 @@
 
     <!-- Safety Tips Section -->
     <div id="safety-tips" class="mt-4 p-3 border rounded bg-light">
+        <h4>Safety Tips</h4>
+        <hr>
         <p class="text-muted">Select a crime type to view safety tips.</p>
     </div>
+
+    <hr class="my-4"> <!-- Divider between sections -->
 
     <!-- Blog Section -->
     <div class="mt-5">
@@ -86,56 +90,54 @@
     </div>
 </div>
 
-<!-- JavaScript -->
 <script>
-    const tipsData = {
-        "Theft": ["Keep your belongings secure.", "Avoid crowded areas."],
-        "Assault": ["Stay in well-lit areas.", "Carry a personal alarm."],
-        // Add more tips...
-    };
-
     function showTipsAndPosts() {
         const selectedCrime = document.getElementById("crime_type").value;
 
         // Update Safety Tips
         const tipsContainer = document.getElementById("safety-tips");
-        if (selectedCrime && tipsData[selectedCrime]) {
-            tipsContainer.innerHTML = tipsData[selectedCrime].map(tip => `<p>${tip}</p>`).join('');
+        if (selectedCrime) {
+            tipsContainer.innerHTML = `<h4>Safety Tips</h4><hr>
+                <p>Here are the safety tips for ${selectedCrime}.</p>`;
         } else {
-            tipsContainer.innerHTML = "<p class='text-danger'>No safety tips available for this crime type.</p>";
+            tipsContainer.innerHTML = "<p class='text-danger'>Select a crime type to view safety tips.</p>";
         }
 
-        // Update Blog Posts
+        // Fetch Blog Posts
         fetch(`/api/blog-posts?crime_type=${selectedCrime}`)
-            .then(response => response.json())
-            .then(posts => {
+            .then((response) => response.json())
+            .then((posts) => {
                 const blogPostsContainer = document.getElementById("blog-posts");
                 if (posts.length > 0) {
-                    blogPostsContainer.innerHTML = posts.map(post => `
+                    blogPostsContainer.innerHTML = posts
+                        .map(
+                            (post) => `
                         <div class="card mb-3">
                             <div class="card-body">
-                                <h5 class="card-title">${post.title}</h5>
-                                <p class="card-text"><strong>Location:</strong> ${post.location}</p>
-                                <p class="card-text"><strong>Crime Type:</strong> ${post.crime_type}</p>
-                                <p class="card-text">${post.description}</p>
-                                <p class="card-text"><small>Posted by ${post.author} on ${post.created_at}</small></p>
+                                <h5>${post.title}</h5>
+                                <p>${post.description}</p>
+                                <p><strong>Location:</strong> ${post.location}</p>
+                                <p><strong>Crime Type:</strong> ${post.crime_type}</p>
                             </div>
-                        </div>
-                    `).join('');
+                        </div>`
+                        )
+                        .join("");
                 } else {
-                    blogPostsContainer.innerHTML = "<p class='text-danger'>No blog posts available for this crime type.</p>";
+                    blogPostsContainer.innerHTML =
+                        "<p class='text-danger'>No blog posts available for this crime type.</p>";
                 }
             })
-            .catch(error => {
-                console.error("Error fetching blog posts:", error);
-                document.getElementById("blog-posts").innerHTML = "<p class='text-danger'>Error loading blog posts.</p>";
+            .catch((error) => {
+                console.error("Error loading posts:", error);
+                document.getElementById("blog-posts").innerHTML =
+                    "<p class='text-danger'>Error loading blog posts.</p>";
             });
     }
 
     function openBlogPostModal() {
-        const modal = new bootstrap.Modal(document.getElementById('blogPostModal'), {
-            backdrop: 'static',
-            keyboard: false
+        const modal = new bootstrap.Modal(document.getElementById("blogPostModal"), {
+            backdrop: "static",
+            keyboard: false,
         });
         modal.show();
     }
