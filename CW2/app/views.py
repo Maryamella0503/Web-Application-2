@@ -204,6 +204,7 @@ def send_crime_alert_email(user_email, crime_details):
     )
     msg.body = f"A crime has been reported near your location: {crime_details}"
     mail.send(msg)
+    
 def check_for_crime_alerts():
     app = create_app()  # Create the app instance
     with app.app_context():  # Use the app context

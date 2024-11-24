@@ -39,23 +39,6 @@
         <button type="button" id="cancel-edit" class="btn btn-secondary">Cancel</button>
     </form>
 
-    <!-- Preferences Section -->
-    <form method="POST" action="{{ url_for('views.update_preferences') }}" class="mb-4">
-        <h4>Notification Preferences</h4>
-        <div class="mb-3">
-            <label for="radius" class="form-label">Notification Radius (km):</label>
-            <input type="number" class="form-control" id="radius" name="radius" step="0.1" value="{{ user.notification_radius }}">
-        </div>
-        <div class="mb-3">
-            <label for="summary" class="form-label">Crime Summary:</label>
-            <select id="summary" name="summary" class="form-select">
-                <option value="daily" {% if user.summary_preference == 'daily' %}selected{% endif %}>Daily</option>
-                <option value="weekly" {% if user.summary_preference == 'weekly' %}selected{% endif %}>Weekly</option>
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary">Update Preferences</button>
-    </form>
-
     <!-- Crime Preferences Section -->
     <form id="crime-preferences-form" method="POST" action="{{ url_for('views.update_preferences') }}" class="mb-4">
         <h4>Preferred Crime Types</h4>
