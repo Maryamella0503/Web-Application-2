@@ -84,5 +84,18 @@
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const flashMessage = document.getElementById("flash-message");
+            if (flashMessage) {
+                setTimeout(() => {
+                    // Bootstrap dismiss event
+                    const bsAlert = new bootstrap.Alert(flashMessage);
+                    bsAlert.close();
+                }, 5000); // 5 seconds
+            }
+        });
+    </script>
 </body>
 </html>
