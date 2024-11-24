@@ -20,6 +20,13 @@
                     attribution: '© OpenStreetMap contributors'
                 }).addTo(map);
 
+                // Add Heatmap Layer
+                const heatmapLayer = L.heatLayer([], {
+                    radius: 25,
+                    blur: 15,
+                    maxZoom: 17
+                }).addTo(map);
+
                 L.Control.geocoder().addTo(map);
 
                 function getDistance(lat1, lon1, lat2, lon2) {
@@ -38,16 +45,28 @@
                         .then(response => response.json())
                         .then(data => {
                             const groupedCrimes = {};
+                            const heatmapData = [];
 
-                            // Group crimes by coordinates
+                            // Group crimes by coordinates and add to heatmap
                             data.forEach(crime => {
                                 const key = `${crime.latitude},${crime.longitude}`;
                                 if (!groupedCrimes[key]) {
                                     groupedCrimes[key] = [];
                                 }
                                 groupedCrimes[key].push(crime);
+
+                                const latitude = parseFloat(crime.latitude);
+                                const longitude = parseFloat(crime.longitude);
+
+                                if (!isNaN(latitude) && !isNaN(longitude)) {
+                                    heatmapData.push([latitude, longitude, 1]);
+                                }
                             });
 
+                            // Add heatmap points to the heatmap layer
+                            heatmapLayer.setLatLngs(heatmapData);
+
+                            // Add circle markers with grouped popups
                             Object.entries(groupedCrimes).forEach(([coordinates, crimes]) => {
                                 const [latitude, longitude] = coordinates.split(',').map(Number);
 
