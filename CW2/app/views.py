@@ -367,6 +367,7 @@ def get_safety_recommendations(user):
     return recommendations or ["No significant crimes found near your location."]
 
 @views.route('/safety-tips', methods=['GET', 'POST'])
+@login_required
 def safety_tips():
     # Fetch all crime types for the dropdown
     crime_types = CrimeType.query.all()
@@ -384,6 +385,7 @@ def safety_tips():
 
     return render_template(
         'safety_tips.html',
+        user=current_user,  # Pass the current user
         crime_types=crime_types,
         selected_crime_type=selected_crime_type,
         tips=tips
