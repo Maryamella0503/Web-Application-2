@@ -23,7 +23,7 @@
                 L.Control.geocoder().addTo(map);
 
                 function getDistance(lat1, lon1, lat2, lon2) {
-                    const R = 6371;
+                    const R = 6371; // Radius of Earth in kilometers
                     const dLat = (lat2 - lat1) * Math.PI / 180;
                     const dLon = (lon2 - lon1) * Math.PI / 180;
                     const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
@@ -38,6 +38,9 @@
                         .then(response => response.json())
                         .then(data => {
                             const heatmapData = [];
+                            const locationGroups = {};
+
+                            // Group crimes by location
                             data.forEach(crime => {
                                 let latitude = parseFloat(crime.latitude);
                                 let longitude = parseFloat(crime.longitude);
@@ -51,21 +54,50 @@
                                 if (distance <= 1) {
                                     heatmapData.push([latitude, longitude, 1]);
 
-                                    const circleMarker = L.circleMarker([latitude, longitude], {
-                                        radius: 10,
-                                        color: 'transparent',
-                                        fillColor: 'transparent',
-                                        fillOpacity: 0,
-                                    }).addTo(map);
-
-                                    circleMarker.bindPopup(`
-                                        <strong>${crime.title}</strong><br>
-                                        ${crime.description}<br>
-                                        Location: ${crime.location}
-                                    `);
+                                    const key = `${latitude},${longitude}`;
+                                    if (!locationGroups[key]) {
+                                        locationGroups[key] = [];
+                                    }
+                                    locationGroups[key].push(crime);
                                 }
                             });
 
+                            // Add markers with cycling popups
+                            Object.keys(locationGroups).forEach(key => {
+                                const [latitude, longitude] = key.split(',').map(Number);
+                                const crimes = locationGroups[key];
+                                let currentCrimeIndex = 0;
+
+                                const createPopupContent = (index) => {
+                                    const crime = crimes[index];
+                                    return `
+                                        <strong>${crime.title}</strong><br>
+                                        ${crime.description}<br>
+                                        Location: ${crime.location}<br><br>
+                                        <button id="prev-${key}" class="btn btn-sm btn-secondary">Prev</button>
+                                        <button id="next-${key}" class="btn btn-sm btn-primary">Next</button>
+                                    `;
+                                };
+
+                                const marker = L.marker([latitude, longitude]).addTo(map)
+                                    .bindPopup(createPopupContent(currentCrimeIndex));
+
+                                marker.on('popupopen', () => {
+                                    document.getElementById(`prev-${key}`).addEventListener('click', () => {
+                                        currentCrimeIndex = (currentCrimeIndex - 1 + crimes.length) % crimes.length;
+                                        marker.setPopupContent(createPopupContent(currentCrimeIndex));
+                                        marker.openPopup();
+                                    });
+
+                                    document.getElementById(`next-${key}`).addEventListener('click', () => {
+                                        currentCrimeIndex = (currentCrimeIndex + 1) % crimes.length;
+                                        marker.setPopupContent(createPopupContent(currentCrimeIndex));
+                                        marker.openPopup();
+                                    });
+                                });
+                            });
+
+                            // Add heatmap
                             L.heatLayer(heatmapData, {
                                 radius: 25,
                                 blur: 15,
@@ -78,6 +110,7 @@
                         });
                 }
 
+                // Handle geolocation
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(
                         function(position) {
