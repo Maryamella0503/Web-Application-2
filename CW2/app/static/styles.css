@@ -84,3 +84,12 @@ button {
 label, input, select, textarea {
     font-size: 16px; /* Adjust font size for form elements */
 }
+
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+    }
+    .container {
+        padding: 10px;
+    }
+}
