@@ -20,21 +20,24 @@ auth = Blueprint('auth', __name__)
 
 @views.route('/')
 def home():
-    # Try to fetch data from the API
-    api_success = fetch_crime_data_from_api()
+    try:
+        # Attempt to fetch data from the API
+        api_success = fetch_crime_data_from_api()
+        data_source = "API" if api_success else "Backup CSV"
+    except Exception as e:
+        print(f"Failed to fetch data from API: {e}")
+        api_success = False
+        data_source = "Backup CSV"
 
-    # Load from the backup CSV if the API fails
     if not api_success:
         backup_csv_path = os.path.join(current_app.root_path, 'static', '2024-09-west-yorkshire-street.csv')
-        data_source = "Backup CSV"
-    else:
-        data_source = "API"
+        # Load from backup CSV here if needed
 
     crimes = CrimeReport.query.all()
 
-    # Filter crimes based on user preferences if the user is logged in
+    # Filter crimes based on user preferences if logged in
     if current_user.is_authenticated and current_user.crime_preferences:
-        preferences = [pref.strip().lower() for pref in current_user.crime_preferences.split(',')]  # Normalize preferences
+        preferences = [pref.strip().lower() for pref in current_user.crime_preferences.split(',')]
         crimes = [crime for crime in crimes if crime.title.strip().lower() in preferences]
 
     crime_data = [
@@ -53,7 +56,7 @@ def home():
         'home.html',
         user=current_user if current_user.is_authenticated else None,
         data_source=data_source,
-        crime_data=crime_data  # Pass filtered crime data
+        crime_data=crime_data
     )
 
 @auth.route('/register', methods=['GET', 'POST'])
