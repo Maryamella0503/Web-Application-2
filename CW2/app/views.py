@@ -18,10 +18,9 @@ from app.fetch_crime_data_from_api import fetch_crime_data_from_api
 views = Blueprint('views', __name__)
 auth = Blueprint('auth', __name__)
 
-from collections import defaultdict
-
 @views.route('/')
 def home():
+    # Try to fetch data from the API
     api_success = fetch_crime_data_from_api()
 
     # Load from the backup CSV if the API fails
@@ -35,33 +34,26 @@ def home():
 
     # Filter crimes based on user preferences if the user is logged in
     if current_user.is_authenticated and current_user.crime_preferences:
-        preferences = [pref.strip().lower() for pref in current_user.crime_preferences.split(',')]
+        preferences = [pref.strip().lower() for pref in current_user.crime_preferences.split(',')]  # Normalize preferences
         crimes = [crime for crime in crimes if crime.title.strip().lower() in preferences]
 
-    # Group crimes by location (latitude, longitude)
-    grouped_crimes = defaultdict(list)
-    for crime in crimes:
-        grouped_crimes[(crime.latitude, crime.longitude)].append({
+    crime_data = [
+        {
+            'latitude': crime.latitude,
+            'longitude': crime.longitude,
             'title': crime.title,
             'description': crime.description,
             'location': crime.location,
             'date_reported': crime.date_reported.strftime('%Y-%m-%d')
-        })
-
-    crime_data = [
-        {
-            'latitude': lat,
-            'longitude': lng,
-            'crimes': crime_list
         }
-        for (lat, lng), crime_list in grouped_crimes.items()
+        for crime in crimes
     ]
 
     return render_template(
         'home.html',
         user=current_user if current_user.is_authenticated else None,
         data_source=data_source,
-        crime_data=crime_data  # Pass grouped crime data
+        crime_data=crime_data  # Pass filtered crime data
     )
 
 @auth.route('/register', methods=['GET', 'POST'])
