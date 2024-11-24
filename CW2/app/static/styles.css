@@ -53,3 +53,34 @@ nav a:hover {
     font-size: 1.8rem;
     font-weight: bold;
 }
+
+/* Increase the font size for the entire body */
+body {
+    font-size: 18px; /* Adjust this value as needed */
+}
+
+/* Increase font size for headings */
+h1, h2, h3, h4, h5, h6 {
+    font-size: larger; /* Makes headings larger */
+    font-weight: bold;
+}
+
+/* Increase font size for table content */
+.table td, .table th {
+    font-size: 16px; /* Adjust as needed */
+}
+
+/* Increase font size for buttons */
+button {
+    font-size: 16px; /* Adjust button font size */
+}
+
+/* Specific styles for navbar links */
+.navbar-nav .nav-link {
+    font-size: 18px; /* Adjust size of navigation links */
+}
+
+/* Adjust font size for forms */
+label, input, select, textarea {
+    font-size: 16px; /* Adjust font size for form elements */
+}
