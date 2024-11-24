@@ -28,24 +28,24 @@
     <!-- Crime Preferences Section -->
     <div class="card shadow-sm">
         <div class="card-body">
-            <h4 class="card-title text-center" style="font-size: 1.5rem;">Preferred Crime Types</h4>
+            <h4 class="card-title text-center" style="font-size: 1.8rem;">Preferred Crime Types</h4>
             <hr>
             <form method="POST" action="{{ url_for('views.update_preferences') }}">
                 {% set crime_types = [
                     "Robbery", "Assault", "Burglary", "Vehicle Crime", "Shoplifting",
                     "Antisocial Behaviour", "Arson", "Public Order", "Drugs"
                 ] %}
-                <div class="d-flex flex-wrap" style="font-size: 1.25rem; gap: 1rem;">
+                <div class="d-flex flex-wrap" style="font-size: 1.5rem; gap: 1.5rem;">
                     {% for crime in crime_types %}
                     <div class="form-check d-flex align-items-center">
                         <input class="form-check-input me-2" type="checkbox" name="crime_preferences" value="{{ crime }}" id="crime-{{ crime|lower|replace(' ', '-') }}" 
                                {% if user.crime_preferences and crime in user.crime_preferences %}checked{% endif %}>
-                        <label class="form-check-label" for="crime-{{ crime|lower|replace(' ', '-') }}">{{ crime }}</label>
+                        <label class="form-check-label" for="crime-{{ crime|lower|replace(' ', '-') }}" style="font-size: 1.5rem;">{{ crime }}</label>
                     </div>
                     {% endfor %}
                 </div>
                 <div class="text-center mt-4">
-                    <button type="submit" class="btn btn-success" style="font-size: 1.2rem;">Save Preferences</button>
+                    <button type="submit" class="btn btn-success" style="font-size: 1.5rem;">Save Preferences</button>
                 </div>
             </form>
         </div>
