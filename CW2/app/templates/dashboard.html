@@ -56,21 +56,6 @@
         <button type="submit" class="btn btn-success mt-3">Save Preferences</button>
     </form>
 
-    <!-- Safety Recommendations Section -->
-    <div id="safety-recommendations" class="mb-4">
-        <h4>Safety Recommendations</h4>
-        <ul class="list-group">
-            {% for recommendation in recommendations %}
-                <li class="list-group-item">{{ recommendation }}</li>
-            {% endfor %}
-        </ul>
-    </div>
-
-    <!-- Alerts Section -->
-    <div id="alert-container" class="mb-4">
-        <h4>Recent Alerts</h4>
-        <!-- Alerts will be populated dynamically -->
-    </div>
 </div>
 
 <script>
