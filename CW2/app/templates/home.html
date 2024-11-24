@@ -5,10 +5,11 @@
     {% if user and user.is_authenticated %}
         <div class="text-center my-4">
             <h2>Welcome to the Crime Detection App, {{ user.username }}!</h2>
-            <button id="panic-btn" class="btn btn-danger my-3">Emergency Alert</button>
+            <p class="text-muted">Stay informed, stay safe. Track crime in your area with real-time data.</p>
         </div>
 
-        <div id="map-container" class="rounded shadow mb-4" style="height: 500px;">
+        <!-- Map container with border -->
+        <div id="map-container" class="rounded shadow mb-4" style="height: 450px; border: 3px solid #ccc;">
             <div id="map" class="rounded" style="height: 100%;"></div>
         </div>
 
