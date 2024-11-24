@@ -25,9 +25,6 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('views.home') }}">Home</a>
-                    </li>
                     {% if user and user.is_authenticated %}
                         <li class="nav-item">
                             <a class="nav-link {% if request.endpoint == 'views.home' %}active{% endif %}" href="{{ url_for('views.home') }}">Home</a>
