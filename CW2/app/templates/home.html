@@ -37,40 +37,43 @@
                     fetch('/api/crime-data')
                         .then(response => response.json())
                         .then(data => {
-                            const heatmapData = [];
+                            const groupedCrimes = {};
+
+                            // Group crimes by coordinates
                             data.forEach(crime => {
-                                let latitude = parseFloat(crime.latitude);
-                                let longitude = parseFloat(crime.longitude);
+                                const key = `${crime.latitude},${crime.longitude}`;
+                                if (!groupedCrimes[key]) {
+                                    groupedCrimes[key] = [];
+                                }
+                                groupedCrimes[key].push(crime);
+                            });
+
+                            Object.entries(groupedCrimes).forEach(([coordinates, crimes]) => {
+                                const [latitude, longitude] = coordinates.split(',').map(Number);
 
                                 if (isNaN(latitude) || isNaN(longitude)) {
-                                    console.error('Invalid coordinates:', crime);
+                                    console.error('Invalid coordinates:', coordinates);
                                     return;
                                 }
 
                                 const distance = getDistance(userLat, userLon, latitude, longitude);
                                 if (distance <= 1) {
-                                    heatmapData.push([latitude, longitude, 1]);
+                                    const popupContent = crimes.map(crime => `
+                                        <strong>${crime.title}</strong><br>
+                                        ${crime.description}<br>
+                                        Location: ${crime.location}<hr>
+                                    `).join('');
 
                                     const circleMarker = L.circleMarker([latitude, longitude], {
                                         radius: 10,
-                                        color: 'transparent',
-                                        fillColor: 'transparent',
-                                        fillOpacity: 0,
+                                        color: 'red',
+                                        fillColor: 'red',
+                                        fillOpacity: 0.5,
                                     }).addTo(map);
 
-                                    circleMarker.bindPopup(`
-                                        <strong>${crime.title}</strong><br>
-                                        ${crime.description}<br>
-                                        Location: ${crime.location}
-                                    `);
+                                    circleMarker.bindPopup(`<div style="max-height: 150px; overflow-y: auto;">${popupContent}</div>`);
                                 }
                             });
-
-                            L.heatLayer(heatmapData, {
-                                radius: 25,
-                                blur: 15,
-                                maxZoom: 17
-                            }).addTo(map);
                         })
                         .catch(error => {
                             console.error('Error fetching crime data:', error);
