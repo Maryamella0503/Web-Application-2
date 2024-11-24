@@ -3,58 +3,60 @@
 {% block content %}
 <div class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
     <div class="text-center" style="width: 100%; max-width: 600px;">
-        <h2 class="my-4">{{ user.username }}'s Dashboard</h2>
+        <h2 class="my-4" style="font-size: 2.5rem;">{{ user.username }}'s Dashboard</h2>
 
         <!-- User Info Section -->
         <div id="user-info" class="mb-4">
-            <h4>User Information</h4>
-            <ul class="list-group text-start">
+            <h4 style="font-size: 1.5rem;">User Information</h4>
+            <ul class="list-group text-start" style="font-size: 1.25rem;">
                 <li class="list-group-item"><strong>Phone Number:</strong> {{ user.phone_number or 'N/A' }}</li>
                 <li class="list-group-item"><strong>Home Address:</strong> {{ user.home_address or 'N/A' }}</li>
                 <li class="list-group-item"><strong>Work Address:</strong> {{ user.work_address or 'N/A' }}</li>
                 <li class="list-group-item"><strong>Emergency Contact:</strong> {{ user.emergency_contact or 'N/A' }}</li>
             </ul>
-            <button id="edit-btn" class="btn btn-primary mt-3">Edit</button>
+            <button id="edit-btn" class="btn btn-primary mt-3" style="font-size: 1.2rem;">Edit</button>
         </div>
 
         <!-- Edit User Info Form -->
         <form id="edit-form" method="POST" action="{{ url_for('views.update_user_info') }}" class="mb-4 text-start" style="display: none;">
-            <h4>Edit Information</h4>
+            <h4 style="font-size: 1.5rem;">Edit Information</h4>
             <div class="mb-3">
-                <label for="phone_number" class="form-label">Phone Number:</label>
-                <input type="text" class="form-control" id="phone_number" name="phone_number" value="{{ user.phone_number or '' }}">
+                <label for="phone_number" class="form-label" style="font-size: 1.2rem;">Phone Number:</label>
+                <input type="text" class="form-control" id="phone_number" name="phone_number" value="{{ user.phone_number or '' }}" style="font-size: 1rem;">
             </div>
             <div class="mb-3">
-                <label for="home_address" class="form-label">Home Address:</label>
-                <input type="text" class="form-control" id="home_address" name="home_address" value="{{ user.home_address or '' }}">
+                <label for="home_address" class="form-label" style="font-size: 1.2rem;">Home Address:</label>
+                <input type="text" class="form-control" id="home_address" name="home_address" value="{{ user.home_address or '' }}" style="font-size: 1rem;">
             </div>
             <div class="mb-3">
-                <label for="work_address" class="form-label">Work Address:</label>
-                <input type="text" class="form-control" id="work_address" name="work_address" value="{{ user.work_address or '' }}">
+                <label for="work_address" class="form-label" style="font-size: 1.2rem;">Work Address:</label>
+                <input type="text" class="form-control" id="work_address" name="work_address" value="{{ user.work_address or '' }}" style="font-size: 1rem;">
             </div>
             <div class="mb-3">
-                <label for="emergency_contact" class="form-label">Emergency Contact:</label>
-                <input type="text" class="form-control" id="emergency_contact" name="emergency_contact" value="{{ user.emergency_contact or '' }}">
+                <label for="emergency_contact" class="form-label" style="font-size: 1.2rem;">Emergency Contact:</label>
+                <input type="text" class="form-control" id="emergency_contact" name="emergency_contact" value="{{ user.emergency_contact or '' }}" style="font-size: 1rem;">
             </div>
-            <button type="submit" class="btn btn-success">Save Changes</button>
-            <button type="button" id="cancel-edit" class="btn btn-secondary">Cancel</button>
+            <button type="submit" class="btn btn-success" style="font-size: 1.2rem;">Save Changes</button>
+            <button type="button" id="cancel-edit" class="btn btn-secondary" style="font-size: 1.2rem;">Cancel</button>
         </form>
 
         <!-- Crime Preferences Section -->
         <form id="crime-preferences-form" method="POST" action="{{ url_for('views.update_preferences') }}" class="mb-4 text-start">
-            <h4>Preferred Crime Types</h4>
+            <h4 style="font-size: 1.5rem;">Preferred Crime Types</h4>
             {% set crime_types = [
                 "Robbery", "Assault", "Burglary", "Vehicle Crime", "Shoplifting",
                 "Antisocial Behaviour", "Arson", "Public Order", "Drugs"
             ] %}
-            {% for crime in crime_types %}
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="crime_preferences" value="{{ crime }}" id="crime-{{ crime|lower|replace(' ', '-') }}" 
-                       {% if user.crime_preferences and crime in user.crime_preferences %}checked{% endif %}>
-                <label class="form-check-label" for="crime-{{ crime|lower|replace(' ', '-') }}">{{ crime }}</label>
+            <div style="font-size: 1.25rem;">
+                {% for crime in crime_types %}
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="crime_preferences" value="{{ crime }}" id="crime-{{ crime|lower|replace(' ', '-') }}" 
+                           {% if user.crime_preferences and crime in user.crime_preferences %}checked{% endif %}>
+                    <label class="form-check-label" for="crime-{{ crime|lower|replace(' ', '-') }}">{{ crime }}</label>
+                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-            <button type="submit" class="btn btn-success mt-3">Save Preferences</button>
+            <button type="submit" class="btn btn-success mt-3" style="font-size: 1.2rem;">Save Preferences</button>
         </form>
     </div>
 </div>
