@@ -9,7 +9,7 @@
     <!-- User Info Section -->
     <div class="card shadow-sm mb-5">
         <div class="card-body">
-            <h4 class="card-title" style="font-size: 1.5rem;">User Information</h4>
+            <h4 class="card-title text-center" style="font-size: 1.5rem;">User Information</h4>
             <hr>
             <ul class="list-group text-start" style="font-size: 1.25rem;">
                 <li class="list-group-item"><strong>Phone Number:</strong> {{ user.phone_number or 'N/A' }}</li>
@@ -26,7 +26,7 @@
     <!-- Edit User Info Form -->
     <div class="card shadow-sm mb-5" style="display: none;" id="edit-form">
         <div class="card-body">
-            <h4 class="card-title" style="font-size: 1.5rem;">Edit Information</h4>
+            <h4 class="card-title text-center" style="font-size: 1.5rem;">Edit Information</h4>
             <hr>
             <form method="POST" action="{{ url_for('views.update_user_info') }}">
                 <div class="mb-3">
@@ -56,7 +56,7 @@
     <!-- Crime Preferences Section -->
     <div class="card shadow-sm">
         <div class="card-body">
-            <h4 class="card-title" style="font-size: 1.5rem;">Preferred Crime Types</h4>
+            <h4 class="card-title text-center" style="font-size: 1.5rem;">Preferred Crime Types</h4>
             <hr>
             <form method="POST" action="{{ url_for('views.update_preferences') }}">
                 {% set crime_types = [
