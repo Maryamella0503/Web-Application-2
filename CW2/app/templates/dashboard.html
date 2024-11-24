@@ -35,7 +35,7 @@
                     "Robbery", "Assault", "Burglary", "Vehicle Crime", "Shoplifting",
                     "Antisocial Behaviour", "Arson", "Public Order", "Drugs"
                 ] %}
-                <div class="d-flex flex-wrap" style="font-size: 1.5rem; gap: 1.5rem;">
+                <div class="d-flex flex-wrap" style="font-size: 1.3rem; gap: 1.5rem;">
                     {% for crime in crime_types %}
                     <div class="form-check d-flex align-items-center">
                         <input class="form-check-input me-2" type="checkbox" name="crime_preferences" value="{{ crime }}" id="crime-{{ crime|lower|replace(' ', '-') }}" 
