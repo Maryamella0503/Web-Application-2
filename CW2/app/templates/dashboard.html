@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="text-center mb-5">
-        <h2 class="my-4" style="font-size: 2.5rem;">{{ user.username }}'s Dashboard</h2>
+<div class="container py-3">
+    <div class="text-center mb-4">
+        <h2 class="my-3" style="font-size: 2.5rem;">{{ user.username }}'s Dashboard</h2>
     </div>
 
     <!-- User Info Section -->
-    <div class="card shadow-sm mb-5">
+    <div class="card shadow-sm mb-4">
         <div class="card-body">
             <h4 class="card-title text-center" style="font-size: 1.5rem;">User Information</h4>
             <hr>
@@ -17,8 +17,7 @@
                 <li class="list-group-item"><strong>Work Address:</strong> {{ user.work_address or 'N/A' }}</li>
                 <li class="list-group-item"><strong>Emergency Contact:</strong> {{ user.emergency_contact or 'N/A' }}</li>
             </ul>
-            <div class="text-center mt-4">
-                <!-- Button to trigger modal -->
+            <div class="text-center mt-3">
                 <button type="button" class="btn btn-primary" style="font-size: 1.2rem;" data-bs-toggle="modal" data-bs-target="#editModal">
                     Edit
                 </button>
@@ -36,10 +35,10 @@
                     "Robbery", "Assault", "Burglary", "Vehicle Crime", "Shoplifting",
                     "Antisocial Behaviour", "Arson", "Public Order", "Drugs"
                 ] %}
-                <div style="font-size: 1.25rem;">
+                <div class="d-flex flex-wrap" style="font-size: 1.25rem; gap: 1rem;">
                     {% for crime in crime_types %}
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="crime_preferences" value="{{ crime }}" id="crime-{{ crime|lower|replace(' ', '-') }}" 
+                    <div class="form-check d-flex align-items-center">
+                        <input class="form-check-input me-2" type="checkbox" name="crime_preferences" value="{{ crime }}" id="crime-{{ crime|lower|replace(' ', '-') }}" 
                                {% if user.crime_preferences and crime in user.crime_preferences %}checked{% endif %}>
                         <label class="form-check-label" for="crime-{{ crime|lower|replace(' ', '-') }}">{{ crime }}</label>
                     </div>
