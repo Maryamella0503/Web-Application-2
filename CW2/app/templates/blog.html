@@ -44,12 +44,12 @@
 </div>
 
 <!-- Blog Post Modal -->
-<div id="blogPostModal" class="modal" tabindex="-1">
-    <div class="modal-dialog">
+<div id="blogPostModal" class="modal fade" tabindex="-1" aria-labelledby="blogPostModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">New Blog Post</h5>
-                <button type="button" class="btn-close" onclick="closeBlogPostModal()"></button>
+                <h5 class="modal-title" id="blogPostModalLabel">New Blog Post</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form method="POST" action="{{ url_for('blog.blog_page') }}">
@@ -125,15 +125,19 @@
                 } else {
                     blogPostsContainer.innerHTML = "<p class='text-danger'>No blog posts available for this crime type.</p>";
                 }
+            })
+            .catch(error => {
+                console.error("Error fetching blog posts:", error);
+                document.getElementById("blog-posts").innerHTML = "<p class='text-danger'>Error loading blog posts.</p>";
             });
     }
 
     function openBlogPostModal() {
-        document.getElementById("blogPostModal").style.display = "block";
-    }
-
-    function closeBlogPostModal() {
-        document.getElementById("blogPostModal").style.display = "none";
+        const modal = new bootstrap.Modal(document.getElementById('blogPostModal'), {
+            backdrop: 'static',
+            keyboard: false
+        });
+        modal.show();
     }
 </script>
 {% endblock %}
