@@ -60,8 +60,8 @@ class BlogPost(db.Model):
     description = db.Column(db.Text, nullable=False)
     crime_type = db.Column(db.String(50), nullable=False)
     created_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
     likes = db.relationship('Like', backref='post', lazy='dynamic')
+    author = db.relationship('User', backref='posts', lazy=True)
 
 class Like(db.Model):
     id = db.Column(db.Integer, primary_key=True)

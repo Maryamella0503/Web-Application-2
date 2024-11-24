@@ -436,7 +436,7 @@ def blog_page():
     # Fetch posts based on the selected crime type
     crime_filter = request.args.get('crime_type')
     if crime_filter:
-        posts = BlogPost.query.filter_by(crime_type=crime_filter).all()
+        posts = BlogPost.query.options(db.joinedload(BlogPost.author)).all()
     else:
         posts = BlogPost.query.all()
 
