@@ -48,3 +48,8 @@ nav a {
 nav a:hover {
     background-color: #555;
 }
+
+.navbar-brand {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
