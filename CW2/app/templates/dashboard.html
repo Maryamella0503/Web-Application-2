@@ -29,7 +29,7 @@
     </div>
 
     <!-- Crime Preferences Section -->
-    <div class="card shadow-sm mb-4">
+    <div class="card shadow-sm">
         <div class="card-body">
             <h4 class="card-title text-center" style="font-size: 1.5rem;">Preferred Crime Types</h4>
             <hr>
@@ -53,16 +53,9 @@
             </form>
         </div>
     </div>
-
-    <!-- Button to Trigger Post Crime Modal -->
-    <div class="text-center mt-4">
-        <button type="button" class="btn btn-danger" style="font-size: 1.5rem;" data-bs-toggle="modal" data-bs-target="#postCrimeModal">
-            Post Crime
-        </button>
-    </div>
 </div>
 
-<!-- Edit Information Modal -->
+<!-- Edit Modal -->
 <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -90,45 +83,6 @@
                     </div>
                     <div class="text-center">
                         <button type="submit" class="btn btn-success" style="font-size: 1.2rem;">Save Changes</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Post Crime Modal -->
-<div class="modal fade" id="postCrimeModal" tabindex="-1" aria-labelledby="postCrimeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="postCrimeModalLabel">Post Crime</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form method="POST" action="{{ url_for('blog.create_post') }}">
-                    <div class="mb-3">
-                        <label for="crime-title" class="form-label" style="font-size: 1.2rem;">Title:</label>
-                        <input type="text" class="form-control" id="crime-title" name="title" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="crime-location" class="form-label" style="font-size: 1.2rem;">Location:</label>
-                        <input type="text" class="form-control" id="crime-location" name="location" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="crime-description" class="form-label" style="font-size: 1.2rem;">Description:</label>
-                        <textarea class="form-control" id="crime-description" name="description" rows="4" required></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="crime-type" class="form-label" style="font-size: 1.2rem;">Crime Type:</label>
-                        <select class="form-select" id="crime-type" name="crime_type" required>
-                            {% for crime in crime_types %}
-                            <option value="{{ crime }}">{{ crime }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-danger" style="font-size: 1.2rem;">Submit</button>
                     </div>
                 </form>
             </div>
