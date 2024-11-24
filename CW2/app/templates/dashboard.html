@@ -41,7 +41,20 @@
         </button>
     </div>
     <div id="blog-posts" class="mt-4">
-        <p class="text-muted">Select a crime type to view related blog posts.</p>
+        {% for post in posts %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ post.title }}</h5>
+                <p><strong>Location:</strong> {{ post.location }}</p>
+                <p><strong>Crime Type:</strong> {{ post.crime_type }}</p>
+                <p>{{ post.description }}</p>
+                <p class="text-muted">
+                    Posted by {{ post.author.username }} on {{ post.created_at }}
+                </p>
+                <button class="btn btn-primary">Like ({{ post.likes }})</button>
+            </div>
+        </div>
+        {% endfor %}
     </div>
 </div>
 
