@@ -21,6 +21,8 @@ class User(UserMixin, db.Model):
     bookmarked_locations = db.Column(db.String(500))  # Can store multiple locations as a string
     notification_radius = db.Column(db.Float, default=1.0)  # Radius in km
     crime_preferences = db.Column(db.String(500), nullable=True, default="")  # Default value is an empty string
+    blog_posts = db.relationship('BlogPost', backref='author', lazy=True)
+
 
     def set_password(self, password):
         self.password = generate_password_hash(password)  # Corrected to use 'self.password'
