@@ -85,6 +85,15 @@ label, input, select, textarea {
     font-size: 16px; /* Adjust font size for form elements */
 }
 
+.card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+.card-body {
+    padding: 15px;
+}
+
 @media (max-width: 768px) {
     .navbar {
         flex-direction: column;

@@ -9,7 +9,7 @@
             <!-- Dropdown to filter by crime type -->
             <form method="GET" action="/safety-tips" class="mb-4">
                 <label for="crime_type" class="form-label">Filter by Crime Type:</label>
-                <select id="crime_type" name="crime_type" class="form-select" onchange="showTips()">
+                <select id="crime_type" name="crime_type" class="form-select" onchange="showTipsAndPosts()">
                     <option value="">-- Select Crime Type --</option>
                     <option value="Theft">Theft</option>
                     <option value="Assault">Assault</option>
@@ -29,9 +29,66 @@
             </div>
         </div>
     </div>
+
+    <hr class="my-5">
+
+    <!-- Blog Section -->
+    <h2 class="text-center mb-4">Community Blog</h2>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <!-- Blog Post Form -->
+            <form method="POST" action="/blog" class="mb-4">
+                <div class="mb-3">
+                    <label for="blog-title" class="form-label">Title</label>
+                    <input type="text" id="blog-title" name="title" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="blog-location" class="form-label">Location</label>
+                    <input type="text" id="blog-location" name="location" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="blog-description" class="form-label">Description</label>
+                    <textarea id="blog-description" name="description" class="form-control" rows="4" required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="blog-crime-type" class="form-label">Crime Type</label>
+                    <select id="blog-crime-type" name="crime_type" class="form-select" required>
+                        <option value="Theft">Theft</option>
+                        <option value="Assault">Assault</option>
+                        <option value="Burglary">Burglary</option>
+                        <option value="Vehicle Crime">Vehicle Crime</option>
+                        <option value="Shoplifting">Shoplifting</option>
+                        <option value="Antisocial Behaviour">Antisocial Behaviour</option>
+                        <option value="Arson">Arson</option>
+                        <option value="Public Order">Public Order</option>
+                        <option value="Drugs">Drugs</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Post</button>
+            </form>
+
+            <!-- Blog Posts -->
+            <div id="blog-posts">
+                {% for post in posts %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ post.title }}</h5>
+                        <p class="card-text"><strong>Location:</strong> {{ post.location }}</p>
+                        <p class="card-text"><strong>Crime Type:</strong> {{ post.crime_type }}</p>
+                        <p class="card-text">{{ post.description }}</p>
+                        <p class="card-text"><small>Posted by {{ post.author.username }} on {{ post.created_at }}</small></p>
+                        <button class="btn btn-outline-primary like-btn" data-id="{{ post.id }}">
+                            <i class="fas fa-thumbs-up"></i> Like ({{ post.likes.count() }})
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 </div>
 
-<!-- JavaScript for filtering safety tips -->
+<!-- JavaScript for filtering safety tips and blog posts -->
 <script>
     const tipsData = {
         "Theft": [
@@ -54,34 +111,10 @@
             "Park in well-lit and busy areas, ideally with surveillance cameras.",
             "Avoid leaving valuables visible in the car."
         ],
-        "Shoplifting": [
-            "Ensure proper surveillance in stores with visible CCTV cameras.",
-            "Train employees to identify suspicious behavior.",
-            "Keep valuable items in locked cabinets."
-        ],
-        "Antisocial Behaviour": [
-            "Avoid engaging with individuals displaying antisocial behavior.",
-            "Stay in well-lit, populated areas.",
-            "Report disturbances to local authorities immediately."
-        ],
-        "Arson": [
-            "Ensure your home or business is equipped with functioning smoke detectors.",
-            "Keep flammable materials, like paper and chemicals, away from heat sources.",
-            "Install security cameras to deter potential arsonists."
-        ],
-        "Public Order": [
-            "Avoid large gatherings or protests if they appear tense.",
-            "Stay calm and move away from escalating situations.",
-            "Avoid alcohol or substance abuse in public areas."
-        ],
-        "Drugs": [
-            "Report suspicious drug activity to local law enforcement anonymously.",
-            "Avoid areas known for drug-related incidents.",
-            "Avoid accepting drinks or substances from strangers."
-        ]
+        // Add other crime types...
     };
 
-    function showTips() {
+    function showTipsAndPosts() {
         const selectedCrime = document.getElementById("crime_type").value;
         const tipsContainer = document.getElementById("safety-tips");
         tipsContainer.innerHTML = ""; // Clear existing tips
@@ -101,6 +134,36 @@
         } else {
             tipsContainer.innerHTML = "<p class='text-danger'>No safety tips available for this crime type.</p>";
         }
+
+        // Add AJAX call here to filter blog posts based on the selected crime type
+        fetch(`/api/blog-posts?crime_type=${selectedCrime}`)
+            .then(response => response.json())
+            .then(posts => {
+                const blogPostsContainer = document.getElementById("blog-posts");
+                blogPostsContainer.innerHTML = ""; // Clear existing posts
+
+                if (posts.length > 0) {
+                    posts.forEach(post => {
+                        const postCard = `
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">${post.title}</h5>
+                                    <p class="card-text"><strong>Location:</strong> ${post.location}</p>
+                                    <p class="card-text"><strong>Crime Type:</strong> ${post.crime_type}</p>
+                                    <p class="card-text">${post.description}</p>
+                                    <p class="card-text"><small>Posted by ${post.author} on ${post.created_at}</small></p>
+                                    <button class="btn btn-outline-primary like-btn" data-id="${post.id}">
+                                        <i class="fas fa-thumbs-up"></i> Like (${post.likes})
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                        blogPostsContainer.insertAdjacentHTML('beforeend', postCard);
+                    });
+                } else {
+                    blogPostsContainer.innerHTML = "<p class='text-danger'>No blog posts available for this crime type.</p>";
+                }
+            });
     }
 </script>
 {% endblock %}

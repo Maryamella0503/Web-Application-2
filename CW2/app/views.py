@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
-from app.models import User, CrimeReport, CrimeType, SafetyTip
+from app.models import User, CrimeReport, CrimeType, SafetyTip, BlogPost, Like, db
 from app.forms import RegistrationForm, LoginForm
 from app import db, mail, create_app
 import os
@@ -17,6 +17,7 @@ from app.fetch_crime_data_from_api import fetch_crime_data_from_api
 
 views = Blueprint('views', __name__)
 auth = Blueprint('auth', __name__)
+blog = Blueprint('blog', __name__)
 
 @views.route('/')
 def home():
@@ -408,3 +409,45 @@ def populate_crime_types():
 def debug_crime_types():
     crime_types = CrimeType.query.all()
     return jsonify([crime_type.name for crime_type in crime_types])
+
+
+@blog.route('/blog', methods=['GET', 'POST'])
+@login_required
+def blog_page():
+    if request.method == 'POST':
+        title = request.form.get('title')
+        location = request.form.get('location')
+        description = request.form.get('description')
+        crime_type = request.form.get('crime_type')
+
+        new_post = BlogPost(
+            title=title,
+            location=location,
+            description=description,
+            crime_type=crime_type,
+            created_by=current_user.id
+        )
+        db.session.add(new_post)
+        db.session.commit()
+        return redirect(url_for('blog.blog_page'))
+
+    crime_filter = request.args.get('crime_type')
+    if crime_filter:
+        posts = BlogPost.query.filter_by(crime_type=crime_filter).all()
+    else:
+        posts = BlogPost.query.all()
+
+    return render_template('blog.html', posts=posts)
+
+@blog.route('/like/<int:post_id>', methods=['POST'])
+@login_required
+def like_post(post_id):
+    post = BlogPost.query.get_or_404(post_id)
+    like = Like.query.filter_by(user_id=current_user.id, post_id=post.id).first()
+    if like:
+        db.session.delete(like)
+    else:
+        new_like = Like(user_id=current_user.id, post_id=post.id)
+        db.session.add(new_like)
+    db.session.commit()
+    return jsonify({'likes': post.likes.count()})
