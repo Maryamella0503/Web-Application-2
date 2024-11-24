@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Safety Tips & Community Blog</h2>
+
+    <!-- Dropdown to filter by crime type -->
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <form class="mb-4">
+                <label for="crime_type" class="form-label">Filter by Crime Type:</label>
+                <select id="crime_type" name="crime_type" class="form-select" onchange="showTipsAndPosts()">
+                    <option value="">-- Select Crime Type --</option>
+                    <option value="Theft">Theft</option>
+                    <option value="Assault">Assault</option>
+                    <option value="Burglary">Burglary</option>
+                    <option value="Vehicle Crime">Vehicle Crime</option>
+                    <option value="Shoplifting">Shoplifting</option>
+                    <option value="Antisocial Behaviour">Antisocial Behaviour</option>
+                    <option value="Arson">Arson</option>
+                    <option value="Public Order">Public Order</option>
+                    <option value="Drugs">Drugs</option>
+                </select>
+            </form>
+        </div>
+    </div>
+
+    <!-- Safety Tips Section -->
+    <div id="safety-tips" class="mt-4 p-3 border rounded bg-light">
+        <p class="text-muted">Select a crime type to view safety tips.</p>
+    </div>
+
+    <!-- Blog Section -->
+    <div class="mt-5">
+        <div class="d-flex justify-content-between align-items-center">
+            <h3>Community Blog</h3>
+            <button class="btn btn-primary" onclick="openBlogPostModal()">New Post</button>
+        </div>
+
+        <div id="blog-posts" class="mt-4">
+            <p class="text-muted">Select a crime type to view related blog posts.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Blog Post Modal -->
+<div id="blogPostModal" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">New Blog Post</h5>
+                <button type="button" class="btn-close" onclick="closeBlogPostModal()"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{{ url_for('blog.blog_page') }}">
+                    <div class="mb-3">
+                        <label for="blog-title" class="form-label">Title</label>
+                        <input type="text" id="blog-title" name="title" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="blog-location" class="form-label">Location</label>
+                        <input type="text" id="blog-location" name="location" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="blog-description" class="form-label">Description</label>
+                        <textarea id="blog-description" name="description" class="form-control" rows="4" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="blog-crime-type" class="form-label">Crime Type</label>
+                        <select id="blog-crime-type" name="crime_type" class="form-select" required>
+                            <option value="Theft">Theft</option>
+                            <option value="Assault">Assault</option>
+                            <option value="Burglary">Burglary</option>
+                            <option value="Vehicle Crime">Vehicle Crime</option>
+                            <option value="Shoplifting">Shoplifting</option>
+                            <option value="Antisocial Behaviour">Antisocial Behaviour</option>
+                            <option value="Arson">Arson</option>
+                            <option value="Public Order">Public Order</option>
+                            <option value="Drugs">Drugs</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Post</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript -->
+<script>
+    const tipsData = {
+        "Theft": ["Keep your belongings secure.", "Avoid crowded areas."],
+        "Assault": ["Stay in well-lit areas.", "Carry a personal alarm."],
+        // Add more tips...
+    };
+
+    function showTipsAndPosts() {
+        const selectedCrime = document.getElementById("crime_type").value;
+
+        // Update Safety Tips
+        const tipsContainer = document.getElementById("safety-tips");
+        if (selectedCrime && tipsData[selectedCrime]) {
+            tipsContainer.innerHTML = tipsData[selectedCrime].map(tip => `<p>${tip}</p>`).join('');
+        } else {
+            tipsContainer.innerHTML = "<p class='text-danger'>No safety tips available for this crime type.</p>";
+        }
+
+        // Update Blog Posts
+        fetch(`/api/blog-posts?crime_type=${selectedCrime}`)
+            .then(response => response.json())
+            .then(posts => {
+                const blogPostsContainer = document.getElementById("blog-posts");
+                if (posts.length > 0) {
+                    blogPostsContainer.innerHTML = posts.map(post => `
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">${post.title}</h5>
+                                <p class="card-text"><strong>Location:</strong> ${post.location}</p>
+                                <p class="card-text"><strong>Crime Type:</strong> ${post.crime_type}</p>
+                                <p class="card-text">${post.description}</p>
+                                <p class="card-text"><small>Posted by ${post.author} on ${post.created_at}</small></p>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    blogPostsContainer.innerHTML = "<p class='text-danger'>No blog posts available for this crime type.</p>";
+                }
+            });
+    }
+
+    function openBlogPostModal() {
+        document.getElementById("blogPostModal").style.display = "block";
+    }
+
+    function closeBlogPostModal() {
+        document.getElementById("blogPostModal").style.display = "none";
+    }
+</script>
+{% endblock %}

@@ -27,13 +27,14 @@ def create_app():
     mail.init_app(app)
 
     # Import Blueprints inside the function to avoid circular imports
-    from app.views import views
+    from app.views import views,blog
     from app.auth import auth
     from app.api import api
-
+    
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/auth')
     app.register_blueprint(api, url_prefix='/api')
+    app.register_blueprint(blog, url_prefix='/blog')
 
     # Configure mail server settings
     app.config['MAIL_SERVER'] = 'smtp.example.com'
