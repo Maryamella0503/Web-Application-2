@@ -2,9 +2,6 @@ from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from datetime import datetime
-from flask_sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
 
 # Many-to-Many Relationship Table
 user_crime = db.Table('user_crime',
