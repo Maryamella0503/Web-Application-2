@@ -410,7 +410,6 @@ def debug_crime_types():
     crime_types = CrimeType.query.all()
     return jsonify([crime_type.name for crime_type in crime_types])
 
-
 @blog.route('/blog', methods=['GET', 'POST'])
 @login_required
 def blog_page():
@@ -420,34 +419,44 @@ def blog_page():
         description = request.form.get('description')
         crime_type = request.form.get('crime_type')
 
+        # Create a new blog post
         new_post = BlogPost(
             title=title,
             location=location,
             description=description,
             crime_type=crime_type,
-            created_by=current_user.id
+            created_by=current_user.id  # Assuming current_user is used for author identification
         )
         db.session.add(new_post)
         db.session.commit()
+
+        # Redirect back to the blog page
         return redirect(url_for('blog.blog_page'))
 
+    # Fetch posts based on the selected crime type
     crime_filter = request.args.get('crime_type')
     if crime_filter:
         posts = BlogPost.query.filter_by(crime_type=crime_filter).all()
     else:
         posts = BlogPost.query.all()
 
+    # Render the blog page with the filtered or all posts
     return render_template('blog.html', posts=posts)
+
 
 @blog.route('/like/<int:post_id>', methods=['POST'])
 @login_required
 def like_post(post_id):
     post = BlogPost.query.get_or_404(post_id)
     like = Like.query.filter_by(user_id=current_user.id, post_id=post.id).first()
+
     if like:
+        # Unlike the post
         db.session.delete(like)
     else:
+        # Like the post
         new_like = Like(user_id=current_user.id, post_id=post.id)
         db.session.add(new_like)
+
     db.session.commit()
-    return jsonify({'likes': post.likes.count()})
+    return jsonify({'likes': len(post.likes)})  # Assuming a relationship exists for likes
