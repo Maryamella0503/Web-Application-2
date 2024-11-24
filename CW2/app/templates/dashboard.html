@@ -2,98 +2,46 @@
 
 {% block content %}
 <div class="container py-3">
-    <div class="text-center mb-4">
-        <!-- Account Icon -->
-        <i class="fas fa-user-circle" style="font-size: 4rem; color: #4caf50;"></i>
-        <!-- Dashboard Header -->
-        <h2 class="my-3" style="font-size: 2.5rem;">{{ user.username }}'s Dashboard</h2>
-    </div>
+    <h2 class="text-center mb-4">Safety Tips & Community Blog</h2>
 
-    <!-- User Info Section -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <h4 class="card-title text-center" style="font-size: 1.5rem;">User Information</h4>
-            <hr>
-            <ul class="list-group text-start" style="font-size: 1.25rem;">
-                <li class="list-group-item"><strong>Phone Number:</strong> {{ user.phone_number or 'N/A' }}</li>
-                <li class="list-group-item"><strong>Home Address:</strong> {{ user.home_address or 'N/A' }}</li>
-                <li class="list-group-item"><strong>Work Address:</strong> {{ user.work_address or 'N/A' }}</li>
-                <li class="list-group-item"><strong>Emergency Contact:</strong> {{ user.emergency_contact or 'N/A' }}</li>
-            </ul>
-            <div class="text-center mt-3">
-                <button type="button" class="btn btn-primary" style="font-size: 1.2rem;" data-bs-toggle="modal" data-bs-target="#editModal">
-                    Edit
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Crime Preferences Section -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <h4 class="card-title text-center" style="font-size: 1.5rem;">Preferred Crime Types</h4>
-            <hr>
-            <form method="POST" action="{{ url_for('views.update_preferences') }}">
-                {% set crime_types = [
-                    "Robbery", "Assault", "Burglary", "Vehicle Crime", "Shoplifting",
-                    "Antisocial Behaviour", "Arson", "Public Order", "Drugs"
-                ] %}
-                <div class="d-flex flex-wrap" style="font-size: 1.0rem; gap: 1.5rem;">
-                    {% for crime in crime_types %}
-                    <div class="form-check d-flex align-items-center">
-                        <input class="form-check-input me-2" type="checkbox" name="crime_preferences" value="{{ crime }}" id="crime-{{ crime|lower|replace(' ', '-') }}" 
-                               {% if user.crime_preferences and crime in user.crime_preferences %}checked{% endif %}>
-                        <label class="form-check-label" for="crime-{{ crime|lower|replace(' ', '-') }}" style="font-size: 1.5rem;">{{ crime }}</label>
-                    </div>
-                    {% endfor %}
-                </div>
-                <div class="text-center mt-4">
-                    <button type="submit" class="btn btn-success" style="font-size: 1.5rem;">Save Preferences</button>
-                </div>
+    <!-- Filter Dropdown -->
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-8">
+            <form>
+                <label for="crime_type" class="form-label">Filter by Crime Type:</label>
+                <select id="crime_type" name="crime_type" class="form-select" onchange="showTipsAndPosts()">
+                    <option value="">-- Select Crime Type --</option>
+                    <option value="Theft">Theft</option>
+                    <option value="Assault">Assault</option>
+                    <option value="Burglary">Burglary</option>
+                    <option value="Vehicle Crime">Vehicle Crime</option>
+                    <option value="Shoplifting">Shoplifting</option>
+                    <option value="Antisocial Behaviour">Antisocial Behaviour</option>
+                    <option value="Arson">Arson</option>
+                    <option value="Public Order">Public Order</option>
+                    <option value="Drugs">Drugs</option>
+                </select>
             </form>
         </div>
     </div>
 
-    <!-- Button to Trigger Post Crime Modal -->
-    <div class="text-center mt-4">
-        <button type="button" class="btn btn-danger" style="font-size: 1.5rem;" data-bs-toggle="modal" data-bs-target="#postCrimeModal">
-            Post Crime
+    <!-- Safety Tips Section -->
+    <div id="safety-tips" class="mt-4 p-3 border rounded bg-light">
+        <p class="text-muted">Select a crime type to view safety tips.</p>
+    </div>
+
+    <!-- Divider -->
+    <hr class="my-5">
+
+    <!-- Community Blog Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3>Community Blog</h3>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#postCrimeModal">
+            New Post
         </button>
     </div>
-</div>
-
-<!-- Edit Information Modal -->
-<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">Edit Information</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form method="POST" action="{{ url_for('views.update_user_info') }}">
-                    <div class="mb-3">
-                        <label for="phone_number" class="form-label" style="font-size: 1.2rem;">Phone Number:</label>
-                        <input type="text" class="form-control" id="phone_number" name="phone_number" value="{{ user.phone_number or '' }}" style="font-size: 1rem;">
-                    </div>
-                    <div class="mb-3">
-                        <label for="home_address" class="form-label" style="font-size: 1.2rem;">Home Address:</label>
-                        <input type="text" class="form-control" id="home_address" name="home_address" value="{{ user.home_address or '' }}" style="font-size: 1rem;">
-                    </div>
-                    <div class="mb-3">
-                        <label for="work_address" class="form-label" style="font-size: 1.2rem;">Work Address:</label>
-                        <input type="text" class="form-control" id="work_address" name="work_address" value="{{ user.work_address or '' }}" style="font-size: 1rem;">
-                    </div>
-                    <div class="mb-3">
-                        <label for="emergency_contact" class="form-label" style="font-size: 1.2rem;">Emergency Contact:</label>
-                        <input type="text" class="form-control" id="emergency_contact" name="emergency_contact" value="{{ user.emergency_contact or '' }}" style="font-size: 1rem;">
-                    </div>
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-success" style="font-size: 1.2rem;">Save Changes</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+    <div id="blog-posts" class="mt-4">
+        <p class="text-muted">Select a crime type to view related blog posts.</p>
     </div>
 </div>
 
@@ -102,37 +50,62 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="postCrimeModalLabel">Post Crime</h5>
+                <h5 class="modal-title" id="postCrimeModalLabel">New Blog Post</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form method="POST" action="{{ url_for('blog.create_post') }}">
                     <div class="mb-3">
-                        <label for="crime-title" class="form-label" style="font-size: 1.2rem;">Title:</label>
+                        <label for="crime-title" class="form-label">Title:</label>
                         <input type="text" class="form-control" id="crime-title" name="title" required>
                     </div>
                     <div class="mb-3">
-                        <label for="crime-location" class="form-label" style="font-size: 1.2rem;">Location:</label>
+                        <label for="crime-location" class="form-label">Location:</label>
                         <input type="text" class="form-control" id="crime-location" name="location" required>
                     </div>
                     <div class="mb-3">
-                        <label for="crime-description" class="form-label" style="font-size: 1.2rem;">Description:</label>
+                        <label for="crime-description" class="form-label">Description:</label>
                         <textarea class="form-control" id="crime-description" name="description" rows="4" required></textarea>
                     </div>
                     <div class="mb-3">
-                        <label for="crime-type" class="form-label" style="font-size: 1.2rem;">Crime Type:</label>
+                        <label for="crime-type" class="form-label">Crime Type:</label>
                         <select class="form-select" id="crime-type" name="crime_type" required>
-                            {% for crime in crime_types %}
-                            <option value="{{ crime }}">{{ crime }}</option>
-                            {% endfor %}
+                            <option value="Theft">Theft</option>
+                            <option value="Assault">Assault</option>
+                            <option value="Burglary">Burglary</option>
+                            <option value="Vehicle Crime">Vehicle Crime</option>
+                            <option value="Shoplifting">Shoplifting</option>
+                            <option value="Antisocial Behaviour">Antisocial Behaviour</option>
+                            <option value="Arson">Arson</option>
+                            <option value="Public Order">Public Order</option>
+                            <option value="Drugs">Drugs</option>
                         </select>
                     </div>
                     <div class="text-center">
-                        <button type="submit" class="btn btn-danger" style="font-size: 1.2rem;">Submit</button>
+                        <button type="submit" class="btn btn-success">Submit</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+<!-- JavaScript -->
+<script>
+    function showTipsAndPosts() {
+        const selectedCrime = document.getElementById("crime_type").value;
+
+        // Update Safety Tips
+        const tipsContainer = document.getElementById("safety-tips");
+        if (selectedCrime) {
+            tipsContainer.innerHTML = `<p class="text-danger">Tips for ${selectedCrime} coming soon!</p>`;
+        } else {
+            tipsContainer.innerHTML = "<p class='text-muted'>Select a crime type to view safety tips.</p>";
+        }
+
+        // Update Blog Posts
+        const blogPostsContainer = document.getElementById("blog-posts");
+        blogPostsContainer.innerHTML = `<p class="text-danger">Blog posts for ${selectedCrime} coming soon!</p>`;
+    }
+</script>
 {% endblock %}
