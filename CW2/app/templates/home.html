@@ -85,9 +85,9 @@
 
                                     const circleMarker = L.circleMarker([latitude, longitude], {
                                         radius: 10,
-                                        color: 'red',
-                                        fillColor: 'red',
-                                        fillOpacity: 0.5,
+                                        color: 'transparent',     // No border
+                                        fillColor: 'transparent', // No fill color
+                                        fillOpacity: 0            // Fully transparent
                                     }).addTo(map);
 
                                     circleMarker.bindPopup(`<div style="max-height: 150px; overflow-y: auto;">${popupContent}</div>`);
