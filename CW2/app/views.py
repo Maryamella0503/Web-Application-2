@@ -461,3 +461,25 @@ def like_post(post_id):
 
     db.session.commit()
     return jsonify({'likes': len(post.likes)})  # Assuming a relationship exists for likes
+
+@blog.route('/api/blog-posts', methods=['GET'])
+def get_blog_posts():
+    crime_type = request.args.get('crime_type')
+    if crime_type:
+        posts = BlogPost.query.filter_by(crime_type=crime_type).all()
+    else:
+        posts = BlogPost.query.all()
+
+    posts_data = [
+        {
+            "id": post.id,
+            "title": post.title,
+            "location": post.location,
+            "description": post.description,
+            "crime_type": post.crime_type,
+            "author": post.author.username,
+            "created_at": post.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+        }
+        for post in posts
+    ]
+    return jsonify(posts_data)
