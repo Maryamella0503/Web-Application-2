@@ -19,26 +19,35 @@
 <body>
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="{{ url_for('main.home') }}">Crime Watch</a>
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="{{ url_for('views.home') }}" style="font-size: 1.5rem;">
+                <!-- Add an icon -->
+                <img src="{{ url_for('static', filename='Icon.png') }}" alt="App Icon" width="30" height="30" class="me-2">
+                Crime Watch
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
+                    <!-- Always visible -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.home') }}">Home</a>
+                        <a class="nav-link" href="{{ url_for('views.home') }}">Home</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('user.dashboard') }}">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('blog.blog_page') }}">Blog</a>
-                    </li>
-                    {% if current_user.is_authenticated %}
+
+                    <!-- Authenticated user links -->
+                    {% if user and user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('views.dashboard') }}">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('blog.blog_page') }}">Blog</a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
                         </li>
+
+                    <!-- Unauthenticated user links -->
                     {% else %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
@@ -89,7 +98,7 @@
                     // Bootstrap dismiss event
                     const bsAlert = new bootstrap.Alert(flashMessage);
                     bsAlert.close();
-                }, 5000); // 5 seconds
+                }, 2000); // 5 seconds
             }
         });
     </script>
