@@ -445,23 +445,14 @@ def blog_page():
 @blog.route('/like/<int:post_id>', methods=['POST'])
 @login_required
 def like_post(post_id):
-    # Fetch the blog post
     post = BlogPost.query.get_or_404(post_id)
-
-    # Check if the current user has already liked the post
     like = Like.query.filter_by(user_id=current_user.id, post_id=post.id).first()
-
     if like:
-        # Unlike the post
-        db.session.delete(like)
+        db.session.delete(like)  # Unlike the post
     else:
-        # Add a new like
         new_like = Like(user_id=current_user.id, post_id=post.id)
         db.session.add(new_like)
-
     db.session.commit()
-
-    # Return updated like count as JSON
     return jsonify({'likes': post.likes.count()})
 
 @blog.route('/api/blog-posts', methods=['GET'])

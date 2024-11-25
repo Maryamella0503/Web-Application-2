@@ -154,8 +154,8 @@
                                     <p class="card-text"><strong>Crime Type:</strong> ${post.crime_type}</p>
                                     <p class="card-text">${post.description}</p>
                                     <p class="card-text"><small>Posted by ${post.author || "Unknown"} on ${post.created_at}</small></p>
-                                    <button class="btn btn-outline-primary like-btn" data-id="${post.id}">
-                                        <i class="fas fa-thumbs-up"></i> Like (${post.likes})
+                                    <button class="btn btn-outline-primary like-btn" data-id="{{ post.id }}">
+                                        <i class="fas fa-thumbs-up"></i> Like ({{ post.likes.count() }})
                                     </button>
                                 </div>
                             </div>`;
@@ -171,29 +171,29 @@
     }
 
     document.addEventListener("click", function (e) {
-        if (e.target && e.target.classList.contains("like-btn")) {
-            const postId = e.target.getAttribute("data-id");
+    if (e.target && e.target.classList.contains("like-btn")) {
+        const postId = e.target.getAttribute("data-id");
 
-            fetch(`/like/${postId}`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+        fetch(`/like/${postId}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`Failed to like the post: ${response.status}`);
+                }
+                return response.json();
             })
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error("Failed to like the post.");
-                    }
-                    return response.json();
-                })
-                .then((data) => {
-                    // Update the like count in the UI
-                    e.target.innerHTML = `<i class="fas fa-thumbs-up"></i> Like (${data.likes})`;
-                })
-                .catch((error) => {
-                    console.error("Error liking post:", error);
-                });
-        }
-    });
+            .then((data) => {
+                console.log("Like response:", data); // Log the response
+                e.target.innerHTML = `<i class="fas fa-thumbs-up"></i> Like (${data.likes})`;
+            })
+            .catch((error) => {
+                console.error("Error liking post:", error); // Log errors
+            });
+    }
+});
 </script>
 {% endblock %}
