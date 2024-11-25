@@ -432,14 +432,14 @@ def blog_page():
 
         return redirect(url_for('blog.blog_page'))
 
-    # Fetch posts based on the selected crime type
+    # Fetch posts based on crime type filter
     crime_filter = request.args.get('crime_type')
     if crime_filter:
         posts = BlogPost.query.filter_by(crime_type=crime_filter).all()
     else:
         posts = BlogPost.query.all()
 
-    print(f"Posts: {posts}")  # Debugging log to verify fetched posts
+    print(f"Posts: {posts}")  # Debugging: Check if posts are being retrieved
     return render_template('blog.html', posts=posts)
 
 @blog.route('/like/<int:post_id>', methods=['POST'])

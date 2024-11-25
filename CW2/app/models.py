@@ -60,8 +60,7 @@ class BlogPost(db.Model):
     description = db.Column(db.Text, nullable=False)
     crime_type = db.Column(db.String(50), nullable=False)
     created_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    likes = db.relationship('Like', backref='post', lazy='dynamic')
-    author = db.relationship('User', lazy=True)  # Explicit author relationship
+    author = db.relationship('User', backref='blog_posts', lazy=True)  # Ensure correct backref here
 
 class Like(db.Model):
     __tablename__ = 'like'
