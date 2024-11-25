@@ -444,44 +444,40 @@ def blog_page():
     print("Posts being sent to template:", posts)
     return render_template('blog.html', posts=posts)
 
-
 @blog.route('/like/<int:post_id>', methods=['POST'])
 @login_required
 def like_post(post_id):
     post = BlogPost.query.get_or_404(post_id)
     like = Like.query.filter_by(user_id=current_user.id, post_id=post.id).first()
-
     if like:
-        # Unlike the post
-        db.session.delete(like)
+        db.session.delete(like)  # Unlike the post
     else:
-        # Like the post
         new_like = Like(user_id=current_user.id, post_id=post.id)
         db.session.add(new_like)
-
     db.session.commit()
-    return jsonify({'likes': len(post.likes)})  # Assuming a relationship exists for likes
+
+    # Return updated like count
+    return jsonify({'likes': post.likes.count()})
 
 @blog.route('/api/blog-posts', methods=['GET'])
 def get_blog_posts():
     crime_type = request.args.get('crime_type')
-    print(f"Fetching blog posts for crime type: {crime_type}")  # Debugging log
     if crime_type:
         posts = BlogPost.query.filter_by(crime_type=crime_type).all()
     else:
         posts = BlogPost.query.all()
 
-    print(f"Number of posts found: {len(posts)}")  # Debugging log
-
+    # Serialize posts for JSON response
     posts_data = [
         {
-            "id": post.id,
-            "title": post.title,
-            "location": post.location,
-            "description": post.description,
-            "crime_type": post.crime_type,
-            "author": post.author.username if post.author else "Unknown",
-            "created_at": post.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+            'id': post.id,
+            'title': post.title,
+            'location': post.location,
+            'description': post.description,
+            'crime_type': post.crime_type,
+            'author': post.author.username if post.author else 'Unknown',
+            'created_at': post.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+            'likes': post.likes.count()
         }
         for post in posts
     ]
