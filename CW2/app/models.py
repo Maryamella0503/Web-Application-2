@@ -21,7 +21,6 @@ class User(UserMixin, db.Model):
     bookmarked_locations = db.Column(db.String(500))  # Can store multiple locations as a string
     notification_radius = db.Column(db.Float, default=1.0)  # Radius in km
     crime_preferences = db.Column(db.String(500), nullable=True, default="")  # Default value is an empty string
-    blog_posts = db.relationship('BlogPost', backref='author', lazy=True)
 
 
     def set_password(self, password):
@@ -54,21 +53,18 @@ class SafetyTip(db.Model):
         return f"<SafetyTip {self.content}>"
     
 class BlogPost(db.Model):
+    __tablename__ = 'blog_post'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(150), nullable=False)
     location = db.Column(db.String(150), nullable=False)
     description = db.Column(db.Text, nullable=False)
     crime_type = db.Column(db.String(50), nullable=False)
     created_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    likes = db.relationship('Like', backref='liked_post', lazy='dynamic')  # Updated backref name
-
-    def likes_count(self):
-        return self.likes.count()
-
+    likes = db.relationship('Like', backref='post', lazy='dynamic')
+    author = db.relationship('User', lazy=True)  # Explicit author relationship
 
 class Like(db.Model):
+    __tablename__ = 'like'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('blog_post.id'), nullable=False)
-    user = db.relationship('User', backref='likes')
-    post = db.relationship('BlogPost', backref='likes_list')  # Renamed backref for clarity

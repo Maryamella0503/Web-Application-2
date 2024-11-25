@@ -425,22 +425,21 @@ def blog_page():
             location=location,
             description=description,
             crime_type=crime_type,
-            created_by=current_user.id  # Assuming current_user is used for author identification
+            created_by=current_user.id
         )
         db.session.add(new_post)
         db.session.commit()
 
-        # Redirect back to the blog page
         return redirect(url_for('blog.blog_page'))
 
     # Fetch posts based on the selected crime type
     crime_filter = request.args.get('crime_type')
     if crime_filter:
-        posts = BlogPost.query.filter_by(crime_type=crime_filter).options(db.joinedload(BlogPost.author)).all()
+        posts = BlogPost.query.filter_by(crime_type=crime_filter).all()
     else:
         posts = BlogPost.query.all()
-    # Render the blog page with the filtered or all posts
-    print("Posts being sent to template:", posts)
+
+    print("Posts being sent to template:", posts)  # Debugging log
     return render_template('blog.html', posts=posts)
 
 @blog.route('/like/<int:post_id>', methods=['POST'])
@@ -448,9 +447,10 @@ def blog_page():
 def like_post(post_id):
     # Fetch the blog post
     post = BlogPost.query.get_or_404(post_id)
+
     # Check if the current user has already liked the post
     like = Like.query.filter_by(user_id=current_user.id, post_id=post.id).first()
-    
+
     if like:
         # Unlike the post
         db.session.delete(like)
@@ -458,8 +458,9 @@ def like_post(post_id):
         # Add a new like
         new_like = Like(user_id=current_user.id, post_id=post.id)
         db.session.add(new_like)
-    
+
     db.session.commit()
+
     # Return updated like count as JSON
     return jsonify({'likes': post.likes.count()})
 
