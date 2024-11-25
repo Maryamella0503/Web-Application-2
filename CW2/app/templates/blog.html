@@ -158,19 +158,19 @@
     };
 
     function showTipsAndPosts() {
-    const selectedCrime = document.getElementById('crime_type').value;
+    const selectedCrime = document.getElementById("crime_type").value;
 
     // Update Safety Tips
-    const tipsContainer = document.getElementById('safety-tips');
+    const tipsContainer = document.getElementById("safety-tips");
     tipsContainer.innerHTML = ''; // Clear existing tips
 
     if (selectedCrime && tipsData[selectedCrime]) {
-        const tipsList = document.createElement('ul');
-        tipsList.className = 'list-group'; // Bootstrap list group
+        const tipsList = document.createElement("ul");
+        tipsList.className = "list-group"; // Bootstrap list group
 
         tipsData[selectedCrime].forEach((tip) => {
-            const tipItem = document.createElement('li');
-            tipItem.className = 'list-group-item'; // Bootstrap list group item
+            const tipItem = document.createElement("li");
+            tipItem.className = "list-group-item"; // Bootstrap list group item
             tipItem.textContent = tip;
             tipsList.appendChild(tipItem);
         });
