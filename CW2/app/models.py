@@ -62,7 +62,12 @@ class BlogPost(db.Model):
     created_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     likes = db.relationship('Like', backref='post', lazy='dynamic')
 
+    def likes_count(self):
+        return self.likes.count()
+
 class Like(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('blog_post.id'), nullable=False)
+    user = db.relationship('User', backref='likes')
+    post = db.relationship('BlogPost', backref='likes')
