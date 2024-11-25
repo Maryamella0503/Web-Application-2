@@ -50,9 +50,6 @@
                     <p class="card-text"><strong>Crime Type:</strong> {{ post.crime_type }}</p>
                     <p class="card-text">{{ post.description }}</p>
                     <p class="card-text"><small>Posted by {{ post.author.username }} on {{ post.created_at }}</small></p>
-                    <button class="btn btn-outline-primary like-btn" data-id="{{ post.id }}">
-                        <i class="fas fa-thumbs-up"></i> Like ({{ post.likes.count() }})
-                    </button>
                 </div>
             </div>
             {% endfor %}
@@ -115,46 +112,7 @@
             "Be cautious in crowded areas to avoid pickpockets.",
             "Avoid using your phone or other electronics in areas known for theft."
         ],
-        "Assault": [
-            "Avoid walking alone at night and stay in well-lit areas.",
-            "Consider carrying a personal safety alarm.",
-            "Plan your route in advance and let someone know where you’re going.",
-            "Stay aware of your surroundings and avoid distractions like headphones or phones."
-        ],
-        "Burglary": [
-            "Ensure your doors and windows are locked before leaving.",
-            "Install security cameras and motion sensor lights.",
-            "Keep valuables out of sight from windows, and avoid leaving spare keys outside.",
-            "Use deadbolts and high-quality locks on all exterior doors."
-        ],
-        "Vehicle Crime": [
-            "Always lock your car doors and roll up windows when leaving your vehicle.",
-            "Park in well-lit and busy areas, ideally with surveillance cameras.",
-            "Avoid leaving valuables visible in the car."
-        ],
-        "Shoplifting": [
-            "Ensure proper surveillance in stores with visible CCTV cameras.",
-            "Keep valuable items in locked cabinets.",
-            "Train employees to identify suspicious behavior."
-        ],
-        "Antisocial Behaviour": [
-            "Avoid engaging with individuals displaying antisocial behavior.",
-            "Stay in well-lit, populated areas.",
-            "Report disturbances to local authorities."
-        ],
-        "Arson": [
-            "Keep flammable materials away from heat sources.",
-            "Install security cameras.",
-            "Ensure working fire extinguishers and smoke alarms."
-        ],
-        "Public Order": [
-            "Avoid large gatherings that appear tense.",
-            "Stay calm and move away from escalating situations."
-        ],
-        "Drugs": [
-            "Avoid areas known for drug-related incidents.",
-            "Report suspicious drug activity to authorities."
-        ]
+        // Add other crime types and tips here...
     };
 
     function showTipsAndPosts() {
@@ -162,21 +120,33 @@
 
         // Update Safety Tips
         const tipsContainer = document.getElementById("safety-tips");
-        if (selectedCrime) {
-            tipsContainer.innerHTML = `<p class="text-danger">Tips for ${selectedCrime} coming soon!</p>`;
+        tipsContainer.innerHTML = ""; // Clear existing tips
+
+        if (selectedCrime && tipsData[selectedCrime]) {
+            const tipsList = document.createElement("ul");
+            tipsList.className = "list-group"; // Bootstrap list group
+
+            tipsData[selectedCrime].forEach(tip => {
+                const tipItem = document.createElement("li");
+                tipItem.className = "list-group-item"; // Bootstrap list group item
+                tipItem.textContent = tip;
+                tipsList.appendChild(tipItem);
+            });
+
+            tipsContainer.appendChild(tipsList);
         } else {
             tipsContainer.innerHTML = "<p class='text-muted'>Select a crime type to view safety tips.</p>";
         }
 
         // Fetch Blog Posts
         fetch(`/api/blog-posts?crime_type=${selectedCrime}`)
-            .then((response) => response.json())
-            .then((posts) => {
+            .then(response => response.json())
+            .then(posts => {
                 const blogPostsContainer = document.getElementById("blog-posts");
                 blogPostsContainer.innerHTML = ""; // Clear previous content
 
                 if (posts.length > 0) {
-                    posts.forEach((post) => {
+                    posts.forEach(post => {
                         const postCard = `
                             <div class="card mb-3">
                                 <div class="card-body">
@@ -184,10 +154,6 @@
                                     <p class="card-text"><strong>Location:</strong> ${post.location}</p>
                                     <p class="card-text"><strong>Crime Type:</strong> ${post.crime_type}</p>
                                     <p class="card-text">${post.description}</p>
-                                    <p class="card-text"><small>Posted by ${post.author.username} on ${post.created_at}</small></p>
-                                    <button class="btn btn-outline-primary like-btn" data-id="${post.id}">
-                                        <i class="fas fa-thumbs-up"></i> Like (${post.likes})
-                                    </button>
                                 </div>
                             </div>`;
                         blogPostsContainer.insertAdjacentHTML("beforeend", postCard);
@@ -196,10 +162,8 @@
                     blogPostsContainer.innerHTML = "<p class='text-muted'>No blog posts available for this crime type.</p>";
                 }
             })
-            .catch((error) => {
+            .catch(error => {
                 console.error("Error loading posts:", error);
-                const blogPostsContainer = document.getElementById("blog-posts");
-                blogPostsContainer.innerHTML = "<p class='text-danger'>Error loading blog posts.</p>";
             });
     }
 </script>
