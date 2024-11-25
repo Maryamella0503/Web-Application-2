@@ -60,14 +60,15 @@ class BlogPost(db.Model):
     description = db.Column(db.Text, nullable=False)
     crime_type = db.Column(db.String(50), nullable=False)
     created_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    likes = db.relationship('Like', backref='post', lazy='dynamic')
+    likes = db.relationship('Like', backref='liked_post', lazy='dynamic')  # Updated backref name
 
     def likes_count(self):
         return self.likes.count()
+
 
 class Like(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('blog_post.id'), nullable=False)
     user = db.relationship('User', backref='likes')
-    post = db.relationship('BlogPost', backref='likes')
+    post = db.relationship('BlogPost', backref='likes_list')  # Renamed backref for clarity
