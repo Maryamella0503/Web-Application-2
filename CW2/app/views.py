@@ -465,10 +465,13 @@ def like_post(post_id):
 @blog.route('/api/blog-posts', methods=['GET'])
 def get_blog_posts():
     crime_type = request.args.get('crime_type')
+    print(f"Fetching blog posts for crime type: {crime_type}")  # Debugging log
     if crime_type:
         posts = BlogPost.query.filter_by(crime_type=crime_type).all()
     else:
         posts = BlogPost.query.all()
+
+    print(f"Number of posts found: {len(posts)}")  # Debugging log
 
     posts_data = [
         {
@@ -477,7 +480,7 @@ def get_blog_posts():
             "location": post.location,
             "description": post.description,
             "crime_type": post.crime_type,
-            "author": post.author.username,
+            "author": post.author.username if post.author else "Unknown",
             "created_at": post.created_at.strftime('%Y-%m-%d %H:%M:%S'),
         }
         for post in posts
