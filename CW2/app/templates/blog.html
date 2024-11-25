@@ -129,9 +129,14 @@
 
         // Fetch Blog Posts
         fetch(`/api/blog-posts?crime_type=${selectedCrime}`)
-            .then((response) => response.json())
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch posts");
+                }
+                return response.json();
+            })
             .then((posts) => {
-                const blogPostsContainer = document.getElementById('blog-posts');
+                const blogPostsContainer = document.getElementById("blog-posts");
                 blogPostsContainer.innerHTML = ""; // Clear existing posts
 
                 if (posts.length > 0) {
@@ -146,7 +151,7 @@
                                     <p class="card-text"><small>Posted by ${post.author} on ${post.created_at}</small></p>
                                 </div>
                             </div>`;
-                        blogPostsContainer.insertAdjacentHTML('beforeend', postCard);
+                        blogPostsContainer.insertAdjacentHTML("beforeend", postCard);
                     });
                 } else {
                     blogPostsContainer.innerHTML = "<p class='text-muted'>No blog posts available for this crime type.</p>";
