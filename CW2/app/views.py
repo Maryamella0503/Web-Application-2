@@ -436,10 +436,9 @@ def blog_page():
     # Fetch posts based on the selected crime type
     crime_filter = request.args.get('crime_type')
     if crime_filter:
-        posts = BlogPost.query.options(db.joinedload(BlogPost.author)).all()
+        posts = BlogPost.query.filter_by(crime_type=crime_filter).options(db.joinedload(BlogPost.author)).all()
     else:
         posts = BlogPost.query.all()
-
     # Render the blog page with the filtered or all posts
     print("Posts being sent to template:", posts)
     return render_template('blog.html', posts=posts)
@@ -462,6 +461,8 @@ def like_post(post_id):
 @blog.route('/api/blog-posts', methods=['GET'])
 def get_blog_posts():
     crime_type = request.args.get('crime_type')
+    print(f"Filtering blog posts for crime_type: {crime_type}")  # Debug log
+
     if crime_type:
         posts = BlogPost.query.filter_by(crime_type=crime_type).all()
     else:
