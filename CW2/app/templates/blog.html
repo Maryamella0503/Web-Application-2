@@ -41,7 +41,24 @@
         </button>
     </div>
     <div id="blog-posts" class="mt-4">
-        <p class="text-muted">Select a crime type to view related blog posts.</p>
+        {% if posts %}
+            {% for post in posts %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">{{ post.title }}</h5>
+                    <p class="card-text"><strong>Location:</strong> {{ post.location }}</p>
+                    <p class="card-text"><strong>Crime Type:</strong> {{ post.crime_type }}</p>
+                    <p class="card-text">{{ post.description }}</p>
+                    <p class="card-text"><small>Posted by {{ post.author.username }} on {{ post.created_at }}</small></p>
+                    <button class="btn btn-outline-primary like-btn" data-id="{{ post.id }}">
+                        <i class="fas fa-thumbs-up"></i> Like ({{ post.likes.count() }})
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-muted">No blog posts available. Create the first post!</p>
+        {% endif %}
     </div>
 </div>
 
@@ -103,9 +120,39 @@
             tipsContainer.innerHTML = "<p class='text-muted'>Select a crime type to view safety tips.</p>";
         }
 
-        // Update Blog Posts
-        const blogPostsContainer = document.getElementById("blog-posts");
-        blogPostsContainer.innerHTML = `<p class="text-danger">Blog posts for ${selectedCrime} coming soon!</p>`;
+        // Fetch Blog Posts
+        fetch(`/api/blog-posts?crime_type=${selectedCrime}`)
+            .then((response) => response.json())
+            .then((posts) => {
+                const blogPostsContainer = document.getElementById("blog-posts");
+                blogPostsContainer.innerHTML = ""; // Clear previous content
+
+                if (posts.length > 0) {
+                    posts.forEach((post) => {
+                        const postCard = `
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">${post.title}</h5>
+                                    <p class="card-text"><strong>Location:</strong> ${post.location}</p>
+                                    <p class="card-text"><strong>Crime Type:</strong> ${post.crime_type}</p>
+                                    <p class="card-text">${post.description}</p>
+                                    <p class="card-text"><small>Posted by ${post.author.username} on ${post.created_at}</small></p>
+                                    <button class="btn btn-outline-primary like-btn" data-id="${post.id}">
+                                        <i class="fas fa-thumbs-up"></i> Like (${post.likes})
+                                    </button>
+                                </div>
+                            </div>`;
+                        blogPostsContainer.insertAdjacentHTML("beforeend", postCard);
+                    });
+                } else {
+                    blogPostsContainer.innerHTML = "<p class='text-muted'>No blog posts available for this crime type.</p>";
+                }
+            })
+            .catch((error) => {
+                console.error("Error loading posts:", error);
+                const blogPostsContainer = document.getElementById("blog-posts");
+                blogPostsContainer.innerHTML = "<p class='text-danger'>Error loading blog posts.</p>";
+            });
     }
 </script>
 {% endblock %}

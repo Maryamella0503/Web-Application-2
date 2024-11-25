@@ -441,6 +441,7 @@ def blog_page():
         posts = BlogPost.query.all()
 
     # Render the blog page with the filtered or all posts
+    print("Posts being sent to template:", posts)
     return render_template('blog.html', posts=posts)
 
 
