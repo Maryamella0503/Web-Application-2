@@ -27,7 +27,6 @@
 
     <!-- Safety Tips Section -->
     <div id="safety-tips" class="mt-4 p-3 border rounded bg-light">
-        <h4>Safety Tips</h4>
         <p class="text-muted">Select a crime type to view safety tips.</p>
     </div>
 
@@ -42,7 +41,24 @@
         </button>
     </div>
     <div id="blog-posts" class="mt-4">
-        <p class="text-muted">Select a crime type to view related blog posts.</p>
+        {% if posts %}
+            {% for post in posts %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">{{ post.title }}</h5>
+                    <p class="card-text"><strong>Location:</strong> {{ post.location }}</p>
+                    <p class="card-text"><strong>Crime Type:</strong> {{ post.crime_type }}</p>
+                    <p class="card-text">{{ post.description }}</p>
+                    <p class="card-text"><small>Posted by {{ post.author.username }} on {{ post.created_at }}</small></p>
+                    <button class="btn btn-outline-primary like-btn" data-id="{{ post.id }}">
+                        <i class="fas fa-thumbs-up"></i> Like ({{ post.likes.count() }})
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-muted">No blog posts available. Create the first post!</p>
+        {% endif %}
     </div>
 </div>
 
@@ -146,33 +162,21 @@
 
         // Update Safety Tips
         const tipsContainer = document.getElementById("safety-tips");
-        tipsContainer.innerHTML = ""; // Clear existing tips
-
-        if (selectedCrime && tipsData[selectedCrime]) {
-            const tipsList = document.createElement("ul");
-            tipsList.className = "list-group"; // Bootstrap list group
-
-            tipsData[selectedCrime].forEach(tip => {
-                const tipItem = document.createElement("li");
-                tipItem.className = "list-group-item"; // Bootstrap list group item
-                tipItem.textContent = tip;
-                tipsList.appendChild(tipItem);
-            });
-
-            tipsContainer.appendChild(tipsList);
+        if (selectedCrime) {
+            tipsContainer.innerHTML = `<p class="text-danger">Tips for ${selectedCrime} coming soon!</p>`;
         } else {
             tipsContainer.innerHTML = "<p class='text-muted'>Select a crime type to view safety tips.</p>";
         }
 
         // Fetch Blog Posts
         fetch(`/api/blog-posts?crime_type=${selectedCrime}`)
-            .then(response => response.json())
-            .then(posts => {
+            .then((response) => response.json())
+            .then((posts) => {
                 const blogPostsContainer = document.getElementById("blog-posts");
                 blogPostsContainer.innerHTML = ""; // Clear previous content
 
                 if (posts.length > 0) {
-                    posts.forEach(post => {
+                    posts.forEach((post) => {
                         const postCard = `
                             <div class="card mb-3">
                                 <div class="card-body">
@@ -180,6 +184,10 @@
                                     <p class="card-text"><strong>Location:</strong> ${post.location}</p>
                                     <p class="card-text"><strong>Crime Type:</strong> ${post.crime_type}</p>
                                     <p class="card-text">${post.description}</p>
+                                    <p class="card-text"><small>Posted by ${post.author.username} on ${post.created_at}</small></p>
+                                    <button class="btn btn-outline-primary like-btn" data-id="${post.id}">
+                                        <i class="fas fa-thumbs-up"></i> Like (${post.likes})
+                                    </button>
                                 </div>
                             </div>`;
                         blogPostsContainer.insertAdjacentHTML("beforeend", postCard);
@@ -188,8 +196,10 @@
                     blogPostsContainer.innerHTML = "<p class='text-muted'>No blog posts available for this crime type.</p>";
                 }
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error("Error loading posts:", error);
+                const blogPostsContainer = document.getElementById("blog-posts");
+                blogPostsContainer.innerHTML = "<p class='text-danger'>Error loading blog posts.</p>";
             });
     }
 </script>
