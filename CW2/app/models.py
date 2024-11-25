@@ -55,12 +55,12 @@ class SafetyTip(db.Model):
     
 class BlogPost(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(150), nullable=False)
-    location = db.Column(db.String(150), nullable=False)
+    title = db.Column(db.String(255), nullable=False)
+    location = db.Column(db.String(255), nullable=False)
     description = db.Column(db.Text, nullable=False)
-    crime_type = db.Column(db.String(50), nullable=False)
-    created_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    likes = db.relationship('Like', backref='post', lazy='dynamic')
+    crime_type = db.Column(db.String(255), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_by = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
 class Like(db.Model):
     id = db.Column(db.Integer, primary_key=True)
