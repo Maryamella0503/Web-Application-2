@@ -439,7 +439,7 @@ def blog_page():
     else:
         posts = BlogPost.query.all()
 
-    print("Posts being sent to template:", posts)  # Debugging log
+    print(f"Posts: {posts}")  # Debugging log to verify fetched posts
     return render_template('blog.html', posts=posts)
 
 @blog.route('/like/<int:post_id>', methods=['POST'])
