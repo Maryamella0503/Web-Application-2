@@ -460,13 +460,15 @@ def like_post(post_id):
 
 @blog.route('/api/blog-posts', methods=['GET'])
 def get_blog_posts():
-    crime_type = request.args.get('crime_type')
-    print(f"Filtering blog posts for crime_type: {crime_type}")  # Debug log
+    crime_type = request.args.get('crime_type')  # Get crime_type from query params
+    print(f"Filtering for crime_type: {crime_type}")  # Debugging log
 
     if crime_type:
-        posts = BlogPost.query.filter_by(crime_type=crime_type).all()
+        posts = BlogPost.query.filter_by(crime_type=crime_type).all()  # Filter posts
     else:
         posts = BlogPost.query.all()
+
+    print(f"Filtered Posts: {posts}")  # Debugging log
 
     # Serialize posts for JSON response
     posts_data = [
