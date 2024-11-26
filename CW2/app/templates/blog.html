@@ -141,12 +141,12 @@
 
 <!-- JavaScript -->
 <script>
-    function showPostDetails(title, location, crimeType, description, author) {
-        document.getElementById("modalTitle").innerText = title;
-        document.getElementById("modalLocation").innerText = location;
-        document.getElementById("modalCrimeType").innerText = crimeType;
-        document.getElementById("modalDescription").innerText = description;
-        document.getElementById("modalAuthor").innerText = author;
+        function showPostDetails(title, location, crimeType, description, author) {
+        document.getElementById("modalTitle").innerText = title || "No Title Provided";
+        document.getElementById("modalLocation").innerText = location || "No Location Provided";
+        document.getElementById("modalCrimeType").innerText = crimeType || "No Crime Type Provided";
+        document.getElementById("modalDescription").innerText = description || "No Description Provided";
+        document.getElementById("modalAuthor").innerText = author || "Unknown Author";
     }
         const tipsData = {
         "Theft": [
@@ -208,63 +208,84 @@
             "Support local community initiatives to address and reduce drug-related crimes."
         ]
     };
-    function showTipsAndPosts() {
-        const selectedCrime = document.getElementById("crime_type").value;
+function showTipsAndPosts() {
+    const selectedCrime = document.getElementById("crime_type").value;
 
-        // Update Safety Tips
-        const tipsContainer = document.getElementById("safety-tips");
-        tipsContainer.innerHTML = ""; // Clear existing tips
+    // Update Safety Tips Section
+    const tipsContainer = document.getElementById("safety-tips");
+    tipsContainer.innerHTML = ""; // Clear existing tips
 
-        if (selectedCrime && tipsData[selectedCrime]) {
-            const tipsList = document.createElement("ul");
-            tipsList.className = "list-group"; // Bootstrap list group
+    if (selectedCrime && tipsData[selectedCrime]) {
+        const tipsList = document.createElement("ul");
+        tipsList.className = "list-group"; // Use Bootstrap list group class
 
-            tipsData[selectedCrime].forEach((tip) => {
-                const tipItem = document.createElement("li");
-                tipItem.className = "list-group-item"; // Bootstrap list group item
-                tipItem.textContent = tip;
-                tipsList.appendChild(tipItem);
-            });
+        tipsData[selectedCrime].forEach(tip => {
+            const tipItem = document.createElement("li");
+            tipItem.className = "list-group-item"; // Bootstrap list group item
+            tipItem.textContent = tip;
+            tipsList.appendChild(tipItem);
+        });
 
-            tipsContainer.appendChild(tipsList);
-        } else {
-            tipsContainer.innerHTML = "<p class='text-muted'>Select a crime type to view safety tips.</p>";
-        }
-
-        // Fetch Blog Posts
-        fetch(`/api/blog-posts?crime_type=${selectedCrime}`)
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Failed to fetch posts");
-                }
-                return response.json();
-            })
-            .then((posts) => {
-                const blogPostsContainer = document.getElementById("blog-posts");
-                blogPostsContainer.innerHTML = ""; // Clear existing posts
-
-                if (posts.length > 0) {
-                    posts.forEach((post) => {
-                        const postCard = `
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <h5 class="card-title">${post.title}</h5>
-                                    <p class="card-text"><strong>Location:</strong> ${post.location}</p>
-                                    <p class="card-text"><strong>Crime Type:</strong> ${post.crime_type}</p>
-                                    <p class="card-text">${post.description}</p>
-                                    <p class="card-text"><small>Posted by ${post.author || "Unknown"}</p>
-                                </div>
-                            </div>`;
-                        blogPostsContainer.insertAdjacentHTML("beforeend", postCard);
-                    });
-                } else {
-                    blogPostsContainer.innerHTML = "<p class='text-muted'>No blog posts available for this crime type.</p>";
-                }
-            })
-            .catch((error) => {
-                console.error("Error fetching posts:", error);
-            });
+        tipsContainer.appendChild(tipsList);
+    } else {
+        tipsContainer.innerHTML = "<p class='text-muted'>Select a crime type to view safety tips.</p>";
     }
 
+    // Fetch Blog Posts
+    fetch(`/api/blog-posts?crime_type=${selectedCrime}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch posts");
+            }
+            return response.json();
+        })
+        .then(posts => {
+            const blogPostsContainer = document.getElementById("blog-posts");
+            blogPostsContainer.innerHTML = ""; // Clear existing posts
+
+            if (posts.length > 0) {
+                posts.forEach(post => {
+                    const postCard = `
+                        <div class="col">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">${post.title || "No Title Provided"}</h5>
+                                    <p class="card-text"><i class="fas fa-map-marker-alt"></i> <strong>Location:</strong> ${post.location || "No Location Provided"}</p>
+                                    <p class="card-text"><i class="fas fa-exclamation-circle"></i> <strong>Crime Type:</strong> ${post.crime_type || "No Crime Type Provided"}</p>
+                                    <p class="card-text">${post.description || "No Description Provided"}</p>
+                                    <p class="card-text"><small>Posted by ${post.author || "Unknown"}</small></p>
+                                </div>
+                            </div>
+                        </div>`;
+                    blogPostsContainer.insertAdjacentHTML("beforeend", postCard);
+                });
+            } else {
+                blogPostsContainer.innerHTML = "<p class='text-muted'>No blog posts available for this crime type.</p>";
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching posts:", error);
+        });
+}
+
+// Ensure modal behavior works correctly
+document.addEventListener("DOMContentLoaded", () => {
+    // Remove overlay when modal is closed
+    document.querySelectorAll('.modal').forEach(modal => {
+        modal.addEventListener('hidden.bs.modal', () => {
+            document.body.classList.remove('overlay-active');
+        });
+
+        modal.addEventListener('shown.bs.modal', () => {
+            document.body.classList.add('overlay-active');
+        });
+    });
+
+    // Handle dropdown change for crime types
+    const crimeTypeDropdown = document.getElementById("crime_type");
+    if (crimeTypeDropdown) {
+        crimeTypeDropdown.addEventListener("change", showTipsAndPosts);
+    }
+});
 </script>
 {% endblock %}

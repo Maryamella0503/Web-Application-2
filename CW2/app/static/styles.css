@@ -1,27 +1,37 @@
-html {
-    height: 100%; /* Ensures full viewport height */
-    margin: 0;    /* Removes default margin */
-    padding: 0;   /* Removes default padding */
-    overflow: hidden; /* Prevents scrolling beyond the viewport */
-}
-
-body {
-    background: linear-gradient(120deg, #e0f7fa, #80deea); /* Your gradient background */
+html, body {
+    height: 100%; /* Full viewport height */
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    font-size: 18px; /* General font size */
+    background: linear-gradient(120deg, #e0f7fa, #80deea); /* Gradient background */
     background-size: cover;
     background-repeat: no-repeat;
-    height: 100vh; /* Ensures it covers the viewport */
-    margin: 0;
-    font-family: 'Arial', sans-serif;
+    overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
-.flash-messages {
+main {
+    position: relative;
+    z-index: 2;
+}
+
+@font-face {
+    font-family: 'font1';
+    src: url('font1.ttf') format('truetype');
+}
+
+.title-heading {
+    font-family: 'font1';
+    font-size: 3rem;
+    font-weight: 600;
+    color: #000;
+    text-align: center;
+}
+
+.flash-messages, .alert {
     margin: 10px 0;
-}
-
-.alert {
     padding: 10px;
     border-radius: 5px;
-    margin-bottom: 10px;
 }
 
 .alert-success {
@@ -41,11 +51,16 @@ p {
     margin-top: 20px;
 }
 
+/* Navbar */
 nav {
     display: flex;
     justify-content: space-around;
     background-color: #333;
     padding: 1rem;
+    position: fixed; /* Sticks navbar to the top */
+    top: 0;
+    width: 100%;
+    z-index: 1030; /* Ensures it stays above other content */
 }
 
 nav ul {
@@ -55,7 +70,7 @@ nav ul {
 }
 
 nav a {
-    color: white;
+    color: #fff;
     text-decoration: none;
     padding: 0.5rem;
     border-radius: 5px;
@@ -70,232 +85,113 @@ nav a:hover {
     font-weight: bold;
 }
 
-/* Increase the font size for the entire body */
-body {
-    font-size: 18px; /* Adjust this value as needed */
-}
-
-/* Increase font size for headings */
-h1, h2, h3, h4, h5, h6 {
-    font-size: larger; /* Makes headings larger */
-    font-weight: bold;
-}
-
-/* Increase font size for table content */
-.table td, .table th {
-    font-size: 16px; /* Adjust as needed */
-}
-
-/* Increase font size for buttons */
-button {
-    font-size: 16px; /* Adjust button font size */
-}
-
-/* Specific styles for navbar links */
-.navbar-nav .nav-link {
-    font-size: 18px; /* Adjust size of navigation links */
-}
-
-/* Adjust font size for forms */
-label, input, select, textarea {
-    font-size: 16px; /* Adjust font size for form elements */
-}
-
-.card {
-    background-color: #F5F5F5; /* Light gray for contrast */
-    color: #333333; /* Dark gray for text */
-    border: 1px solid #CCCCCC; /* Subtle border */
-}
-
-.card-text {
-    color: #0072B2; /* Accessible blue for text */
-}
-
-.btn-primary {
-    background-color: #56B4E9; /* Accessible teal for buttons */
-    border-color: #56B4E9;
-    color: #FFFFFF; /* White text for contrast */
-}
-
-.btn-primary:hover {
-    background-color: #0072B2; /* Darker shade for hover */
+/* Form Styles */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 form .form-control {
-    margin-bottom: 1rem; /* Space below each input */
-    height: 3rem; /* Uniform height for input fields */
-    padding: 0.75rem; /* Ensure proper spacing inside the input fields */
-    box-sizing: border-box; /* Include padding and border in height/width calculations */
+    height: 3rem;
+    padding: 0.75rem;
+    box-sizing: border-box;
 }
 
 form button {
-    height: 3rem; /* Match button height with input fields */
-    margin-top: 1rem; /* Add space above the button */
-    display: block; /* Ensure it takes full width */
-    width: 100%; /* Button takes full width of the form */
-    padding: 0.75rem; /* Ensure consistent padding inside the button */
-    font-size: 1.1rem; /* Adjust font size for better readability */
+    height: 3rem;
+    padding: 0.75rem;
+    font-size: 1.1rem;
+    display: block;
+    width: 100%;
 }
 
 form label {
-    font-size: 1.25rem; /* Ensure consistent label font size */
-    margin-bottom: 0.5rem; /* Add spacing between label and input */
-    color: #cfd8dc; /* Color for label text */
+    font-size: 1.25rem;
+    color: #cfd8dc;
 }
 
-form {
-    display: flex;
-    flex-direction: column; /* Stack elements vertically */
-    align-items: stretch; /* Align children to stretch to full width */
-}
-
-@media (max-width: 768px) {
-    .navbar {
-        flex-direction: column;
-    }
-    .container {
-        padding: 10px;
-    }
-}
-
-#postModal .modal-body p,
-#postModal .modal-body span {
-    color: black; /* Neutral text color */
-}
-
-#postModal .modal-body h5 {
-    color: #007bff; /* Bootstrap primary color for the title */
-}
-
-/* Colorblind-friendly styles */
-.btn-primary {
-    background-color: #0072b2; /* Blue, colorblind-friendly */
-    color: #ffffff; /* White text for contrast */
-    border-color: #005f90; /* Slightly darker border */
-}
-
-.btn-primary:hover {
-    background-color: #005f90; /* Darker blue for hover */
-    border-color: #004974;
-}
-
-.btn-success {
-    background-color: #009e73; /* Green, colorblind-friendly */
-    color: #ffffff; /* White text for contrast */
-    border-color: #007a59; /* Slightly darker border */
-}
-
-.btn-success:hover {
-    background-color: #007a59; /* Darker green for hover */
-    border-color: #005a40;
-}
-
-/* Add this to styles.css */
-body {
-    background: linear-gradient(120deg, #e0f7fa, #80deea); /* Gradient background */
-    background-size: cover;
-    background-repeat: no-repeat;
-    height: 100vh; /* Full viewport height */
-    font-family: 'Arial', sans-serif; /* Set a clean font */
-}
-
-.container {
-    height: 100%; /* Ensures the container takes full height */
-}
-
-.row {
-    height: 100%; /* Full height for row alignment */
-}
-
+/* Card Styles */
 .card {
-    width: 100%; /* Ensures the card takes available width */
-    max-width: 500px; /* Increase this value to make the card wider */
-    margin: auto; /* Centers the card horizontally */
-    background-color: #333; /* Dark background for contrast */
-    border: none;
-    color: #fff;
+    background-color: #f5f5f5;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 10px;
     padding: 20px;
-    border-radius: 10px; /* Slight roundness */
+    margin: auto;
+    max-width: 500px;
+    z-index: 1020; /* Ensures it stays above overlays */
 }
 
-/* Overlay fix for login page */
-.landing-page .overlay {
-    background: rgba(0, 0, 0, 0); /* Keep semi-transparent background */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%; /* Full height of viewport */
-    width: 100%; /* Full width of viewport */
-    position: absolute; /* Overlay positioned on top */
-    top: 0; 
-    left: 0;
-}
-
-/* Card styles for better contrast */
-.landing-page .overlay .card {
-    background-color: #333; /* Ensure dark background for card */
-    border: none;
-    color: #fff;
-    padding: 20px;
-    border-radius: 10px; /* Add slight roundness */
-}
-
-/* Headings and text */
-.landing-page h1 {
-    font-size: 2.5rem;
-    color: #80deea; /* Accessible blue */
-}
-
-.landing-page p {
-    font-size: 1.2rem;
-    color: #cfd8dc; /* Light gray for readability */
+.card-text {
+    color: #0072b2;
 }
 
 /* Buttons */
-.landing-page .btn {
-    font-size: 1.1rem;
-    padding: 10px 20px;
-    margin: 10px;
-    border-radius: 5px;
-    transition: all 0.3s ease;
+button, .btn {
+    font-size: 16px;
+    transition: background-color 0.3s ease;
 }
 
-.landing-page .btn-primary {
-    background-color: #009e73; /* Accessible green */
-    border: none;
+.btn-primary {
+    background-color: #56b4e9;
     color: #fff;
+    border: 1px solid #56b4e9;
 }
 
-.landing-page .btn-primary:hover {
+.btn-primary:hover {
+    background-color: #0072b2;
+}
+
+.btn-success {
+    background-color: #009e73;
+    color: #fff;
+    border: 1px solid #007a59;
+}
+
+.btn-success:hover {
     background-color: #007a59;
 }
 
-.landing-page .btn-outline-light {
-    color: #fff;
-    border: 2px solid #fff;
+/* Modal Styles */
+.modal-backdrop {
+    z-index: 1050; /* Backdrop stays behind modal */
 }
 
-.landing-page .btn-outline-light:hover {
-    background-color: #fff;
-    color: #333;
+.modal {
+    z-index: 1055; /* Ensure modal stays above backdrop */
 }
 
-.navbar {
-    background-color: transparent; /* Transparent navbar */
-    border: none;
+.modal-content {
+    z-index: 1060; /* Ensure modal content is fully interactive */
 }
 
-.navbar-brand {
-    color: #fff; /* White logo text */
-    font-size: 1.8rem;
+/* Overlay */
+.landing-page {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent */
+    z-index: 1040; /* Below modals but above other content */
 }
 
-.navbar-nav .nav-link {
-    color: #fff; /* White links */
-    font-size: 1.2rem;
-    margin-right: 15px;
+/* Show overlay */
+body.overlay-active .landing-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.navbar-nav .nav-link:hover {
-    color: #80deea; /* Light blue hover effect */
+/* Responsive Fixes */
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column;
+    }
+
+    .container {
+        padding: 10px;
+    }
 }
