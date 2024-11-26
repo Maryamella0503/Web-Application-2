@@ -49,8 +49,12 @@
                 <div class="card h-100">
                     <div class="card-body">
                         <h5 class="card-title">{{ post.title }}</h5>
-                        <p class="card-text"><strong>Location:</strong> {{ post.location }}</p>
-                        <p class="card-text"><strong>Crime Type:</strong> {{ post.crime_type }}</p>
+                        <p class="card-text">
+                            <i class="fas fa-map-marker-alt"></i> <strong>Location:</strong> {{ post.location }}
+                        </p>
+                        <p class="card-text">
+                            <i class="fas fa-exclamation-circle"></i> <strong>Crime Type:</strong> {{ post.crime_type }}
+                        </p>
                         <button
                             class="btn btn-primary"
                             data-bs-toggle="modal"
@@ -81,7 +85,7 @@
                 <p><strong>Location:</strong> <span id="modalLocation"></span></p>
                 <p><strong>Crime Type:</strong> <span id="modalCrimeType"></span></p>
                 <p id="modalDescription"></p>
-                <p><small>Posted by <span id="modalAuthor"></span> on <span id="modalDate"></span></small></p>
+                <p><small>Posted by <span id="modalAuthor"></span></small></p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -137,7 +141,7 @@
 
 <!-- JavaScript -->
 <script>
-    function showPostDetails(title, location, crimeType, description, author, date) {
+    function showPostDetails(title, location, crimeType, description, author) {
         document.getElementById("modalTitle").innerText = title;
         document.getElementById("modalLocation").innerText = location;
         document.getElementById("modalCrimeType").innerText = crimeType;

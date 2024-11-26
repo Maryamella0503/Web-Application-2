@@ -86,12 +86,23 @@ label, input, select, textarea {
 }
 
 .card {
-    border: 1px solid #ddd;
-    border-radius: 10px;
+    background-color: #F5F5F5; /* Light gray for contrast */
+    color: #333333; /* Dark gray for text */
+    border: 1px solid #CCCCCC; /* Subtle border */
 }
 
-.card-body {
-    padding: 15px;
+.card-text {
+    color: #0072B2; /* Accessible blue for text */
+}
+
+.btn-primary {
+    background-color: #56B4E9; /* Accessible teal for buttons */
+    border-color: #56B4E9;
+    color: #FFFFFF; /* White text for contrast */
+}
+
+.btn-primary:hover {
+    background-color: #0072B2; /* Darker shade for hover */
 }
 
 @media (max-width: 768px) {
@@ -103,7 +114,11 @@ label, input, select, textarea {
     }
 }
 
-.btn-primary {
-    margin-top: 10px;
-    padding: 5px 15px;
+#postModal .modal-body p,
+#postModal .modal-body span {
+    color: black; /* Neutral text color */
+}
+
+#postModal .modal-body h5 {
+    color: #007bff; /* Bootstrap primary color for the title */
 }
