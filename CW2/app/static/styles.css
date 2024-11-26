@@ -155,16 +155,15 @@ body {
     font-family: 'Arial', sans-serif; /* Set a clean font */
 }
 
-/* Landing Page Styles */
 .landing-page {
-    background: url('{{ url_for("static", filename="images/background.jpg") }}') no-repeat center center fixed;
-    background-size: cover;
-    height: 100vh;
+    background: url('/static/background.png') no-repeat center center fixed;
+    background-size: cover; /* Ensures the image covers the entire area */
+    height: 100vh; /* Full viewport height */
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #ffffff;
-    position: relative;
+    color: #ffffff; /* Ensures text is visible on the background */
+    overflow: hidden; /* Prevents any unwanted scrollbars */
 }
 
 /* Overlay for better readability */
