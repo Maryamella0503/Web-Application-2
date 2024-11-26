@@ -30,13 +30,10 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <!-- Always visible -->
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('views.home') }}">Home</a>
                     </li>
-
-                    <!-- Authenticated user links -->
-                    {% if user and user.is_authenticated %}
+                    {% if current_user.is_authenticated %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('views.dashboard') }}">Dashboard</a>
                         </li>
@@ -46,8 +43,6 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
                         </li>
-
-                    <!-- Unauthenticated user links -->
                     {% else %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
