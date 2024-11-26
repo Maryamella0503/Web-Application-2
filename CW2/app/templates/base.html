@@ -35,10 +35,10 @@
                     </li>
                     {% if current_user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('views.dashboard') }}">Dashboard</a>
+                            <a class="nav-link" href="{{ url_for('blog.blog_page') }}">Blog</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('blog.blog_page') }}">Blog</a>
+                            <a class="nav-link" href="{{ url_for('views.dashboard') }}">Dashboard</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
