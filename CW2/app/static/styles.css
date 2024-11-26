@@ -85,30 +85,85 @@ nav a:hover {
     font-weight: bold;
 }
 
-/* Form Styles */
+/* General styles for the form */
 form {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    color: rgb(0, 0, 0);
 }
 
-form .form-control {
-    height: 3rem;
-    padding: 0.75rem;
-    box-sizing: border-box;
+/* Group styles for the crime preferences section */
+form .crime-preferences {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    font-size: 1rem; /* Adjust font size for crime types */
 }
 
-form button {
-    height: 3rem;
-    padding: 0.75rem;
-    font-size: 1.1rem;
-    display: block;
-    width: 100%;
+/* Specific styling for crime checkboxes */
+form .crime-preferences .form-check {
+    display: flex;
+    align-items: center;
 }
 
-form label {
-    font-size: 1.25rem;
-    color: #cfd8dc;
+/* Styling for the labels of crime types */
+form .crime-preferences .form-check-label {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+/* Individual colors for each crime type */
+form .crime-preferences #crime-robbery + label {
+    color: #FF5733; /* Orange for Robbery */
+}
+
+form .crime-preferences #crime-assault + label {
+    color: #C70039; /* Red for Assault */
+}
+
+form .crime-preferences #crime-burglary + label {
+    color: #900C3F; /* Dark Red for Burglary */
+}
+
+form .crime-preferences #crime-vehicle-crime + label {
+    color: #DAF7A6; /* Light Green for Vehicle Crime */
+}
+
+form .crime-preferences #crime-shoplifting + label {
+    color: #FFC300; /* Yellow for Shoplifting */
+}
+
+form .crime-preferences #crime-antisocial-behaviour + label {
+    color: #581845; /* Purple for Antisocial Behaviour */
+}
+
+form .crime-preferences #crime-arson + label {
+    color: #FF5733; /* Bright Orange for Arson */
+}
+
+form .crime-preferences #crime-public-order + label {
+    color: #2ECC71; /* Green for Public Order */
+}
+
+form .crime-preferences #crime-drugs + label {
+    color: #3498DB; /* Blue for Drugs */
+}
+
+/* Styling for the "Select All" and "Save Preferences" buttons */
+form .crime-preferences-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+form .crime-preferences-buttons button {
+    width: 160px;
+    height: 50px;
+    font-size: 1.2rem;
+    text-align: center;
 }
 
 /* Card Styles */
@@ -154,8 +209,18 @@ button, .btn {
 }
 
 /* Modal Styles */
+/* Prevent lingering overlays from blocking content */
 .modal-backdrop {
-    z-index: 1050; /* Backdrop stays behind modal */
+    z-index: 1050; /* Default Bootstrap backdrop z-index */
+    display: none; /* Ensure hidden when modal is closed */
+}
+
+body.modal-open {
+    overflow: hidden; /* Prevent scrolling when modal is open */
+}
+
+body:not(.modal-open) .modal-backdrop {
+    display: none; /* Hide any lingering backdrops */
 }
 
 .modal {
