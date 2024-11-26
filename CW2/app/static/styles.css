@@ -122,3 +122,117 @@ label, input, select, textarea {
 #postModal .modal-body h5 {
     color: #007bff; /* Bootstrap primary color for the title */
 }
+
+/* Colorblind-friendly styles */
+.btn-primary {
+    background-color: #0072b2; /* Blue, colorblind-friendly */
+    color: #ffffff; /* White text for contrast */
+    border-color: #005f90; /* Slightly darker border */
+}
+
+.btn-primary:hover {
+    background-color: #005f90; /* Darker blue for hover */
+    border-color: #004974;
+}
+
+.btn-success {
+    background-color: #009e73; /* Green, colorblind-friendly */
+    color: #ffffff; /* White text for contrast */
+    border-color: #007a59; /* Slightly darker border */
+}
+
+.btn-success:hover {
+    background-color: #007a59; /* Darker green for hover */
+    border-color: #005a40;
+}
+
+/* Add this to styles.css */
+body {
+    background: linear-gradient(120deg, #e0f7fa, #80deea); /* Gradient background */
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100vh; /* Full viewport height */
+    font-family: 'Arial', sans-serif; /* Set a clean font */
+}
+
+/* Landing Page Styles */
+.landing-page {
+    background: url('{{ url_for("static", filename="images/background.jpg") }}') no-repeat center center fixed;
+    background-size: cover;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    position: relative;
+}
+
+/* Overlay for better readability */
+.landing-page .overlay {
+    background: rgba(0, 0, 0, 0.6); /* Semi-transparent dark overlay */
+    padding: 50px;
+    border-radius: 15px;
+    text-align: center;
+    width: 90%;
+    max-width: 700px;
+}
+
+/* Headings and text */
+.landing-page h1 {
+    font-size: 3.5rem;
+    color: #80deea; /* Accessible blue */
+}
+
+.landing-page p {
+    font-size: 1.5rem;
+    color: #cfd8dc; /* Light gray for readability */
+}
+
+/* Buttons */
+.landing-page .btn {
+    font-size: 1.2rem;
+    padding: 10px 20px;
+    margin: 10px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.landing-page .btn-primary {
+    background-color: #009e73; /* Accessible green */
+    border: none;
+    color: #fff;
+}
+
+.landing-page .btn-primary:hover {
+    background-color: #007a59;
+}
+
+.landing-page .btn-outline-light {
+    color: #fff;
+    border: 2px solid #fff;
+}
+
+.landing-page .btn-outline-light:hover {
+    background-color: #fff;
+    color: #333;
+}
+
+.navbar {
+    background-color: transparent; /* Transparent navbar */
+    border: none;
+}
+
+.navbar-brand {
+    color: #fff; /* White logo text */
+    font-size: 1.8rem;
+}
+
+.navbar-nav .nav-link {
+    color: #fff; /* White links */
+    font-size: 1.2rem;
+    margin-right: 15px;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #80deea; /* Light blue hover effect */
+}

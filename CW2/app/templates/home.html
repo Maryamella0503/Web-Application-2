@@ -138,12 +138,18 @@
             });
         </script>
     {% else %}
-        <div class="text-center my-5">
-            <h1 class="display-4">Welcome to the Crime Detection App</h1>
-            <p class="lead">Track and report crime incidents in your area.</p>
-            <a href="{{ url_for('auth.login') }}" class="btn btn-primary">Log In</a>
-            <a href="{{ url_for('auth.register') }}" class="btn btn-secondary">Register</a>
+    <div class="landing-page">
+        <div class="overlay">
+            <div class="text-center">
+                <h1 class="display-4">Welcome to Crime Watch</h1>
+                <p class="lead">Track and report crime incidents in your area.</p>
+                <div class="button-group">
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg">Log In</a>
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-outline-light btn-lg">Register</a>
+                </div>
+            </div>
         </div>
+    </div>
     {% endif %}
 </div>
 {% endblock %}
