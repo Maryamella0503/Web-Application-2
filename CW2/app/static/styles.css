@@ -1,3 +1,19 @@
+html {
+    height: 100%; /* Ensures full viewport height */
+    margin: 0;    /* Removes default margin */
+    padding: 0;   /* Removes default padding */
+    overflow: hidden; /* Prevents scrolling beyond the viewport */
+}
+
+body {
+    background: linear-gradient(120deg, #e0f7fa, #80deea); /* Your gradient background */
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100vh; /* Ensures it covers the viewport */
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+}
+
 .flash-messages {
     margin: 10px 0;
 }
@@ -155,25 +171,40 @@ body {
     font-family: 'Arial', sans-serif; /* Set a clean font */
 }
 
-.landing-page {
-    background: url('/static/background.png') no-repeat center center fixed;
-    background-size: cover; /* Ensures the image covers the entire area */
-    height: 100vh; /* Full viewport height */
+.container {
+    height: 100%; /* Ensures the container takes full height */
+}
+
+.row {
+    height: 100%; /* Full height for row alignment */
+}
+
+.card {
+    width: 100%; /* Ensures the card takes available width */
+    max-width: 400px; /* Sets a fixed maximum width */
+    margin: auto; /* Centers the card horizontally */
+}
+
+/* Overlay fix for login page */
+.landing-page .overlay {
+    background: rgba(0, 0, 0, 0); /* Keep semi-transparent background */
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #ffffff; /* Ensures text is visible on the background */
-    overflow: hidden; /* Prevents any unwanted scrollbars */
+    height: 100%; /* Full height of viewport */
+    width: 100%; /* Full width of viewport */
+    position: absolute; /* Overlay positioned on top */
+    top: 0; 
+    left: 0;
 }
 
-/* Overlay for better readability */
-.landing-page .overlay {
-    background: rgba(0, 0, 0, 0.6); /* Semi-transparent dark overlay */
-    padding: 50px;
-    border-radius: 15px;
-    text-align: center;
-    width: 90%;
-    max-width: 700px;
+/* Card styles for better contrast */
+.landing-page .overlay .card {
+    background-color: #333; /* Ensure dark background for card */
+    border: none;
+    color: #fff;
+    padding: 20px;
+    border-radius: 10px; /* Add slight roundness */
 }
 
 /* Headings and text */

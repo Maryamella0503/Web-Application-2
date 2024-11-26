@@ -5,43 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Crime Detection App</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
-<body>
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <h1 class="text-center mb-4">Login</h1>
-                
-                <!-- Flash Messages -->
-                {% with messages = get_flashed_messages(with_categories=True) %}
-                    {% if messages %}
-                        <div class="mb-3">
-                            {% for category, message in messages %}
-                                <div class="alert alert-{{ category }}" role="alert">
-                                    {{ message }}
+<body class="landing-page">
+    <div class="overlay">
+        <div class="container h-100">
+            <div class="row justify-content-center align-items-center h-100">
+                <div class="col-lg-4 col-md-6 col-sm-8"> <!-- Ensures proper scaling -->
+                    <div class="card shadow-lg p-5 rounded">
+                        <h1 class="text-center mb-4" style="font-size: 2.5rem; color: #80deea;">Login</h1>
+
+                        <!-- Flash Messages -->
+                        {% with messages = get_flashed_messages(with_categories=True) %}
+                            {% if messages %}
+                                <div class="mb-3">
+                                    {% for category, message in messages %}
+                                        <div class="alert alert-{{ category }}" role="alert">
+                                            {{ message }}
+                                        </div>
+                                    {% endfor %}
                                 </div>
-                            {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+
+                        <!-- Login Form -->
+                        <form method="POST" action="{{ url_for('auth.login') }}">
+                            <div class="mb-4">
+                                <label for="email" class="form-label" style="color: #cfd8dc; font-size: 1.25rem;">Email</label>
+                                <input type="email" class="form-control shadow-sm" id="email" name="email" placeholder="Enter your email" required>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="password" class="form-label" style="color: #cfd8dc; font-size: 1.25rem;">Password</label>
+                                <input type="password" class="form-control shadow-sm" id="password" name="password" placeholder="Enter your password" required>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100" style="font-size: 1.25rem; padding: 12px;">Log In</button>
+                        </form>
+
+                        <div class="text-center mt-4">
+                            <p style="color: #cfd8dc; font-size: 1rem;">Don't have an account? <a href="{{ url_for('auth.register') }}" style="color: #80deea; text-decoration: underline;">Register here.</a></p>
                         </div>
-                    {% endif %}
-                {% endwith %}
-
-                <!-- Login Form -->
-                <form method="POST" action="{{ url_for('auth.login') }}" class="p-4 border rounded shadow-sm">
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
                     </div>
-                    
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary w-100">Log In</button>
-                </form>
-
-                <div class="text-center mt-3">
-                    <p>Don't have an account? <a href="{{ url_for('auth.register') }}">Register here</a>.</p>
                 </div>
             </div>
         </div>
