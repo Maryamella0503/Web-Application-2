@@ -219,13 +219,13 @@ button, .btn {
 }
 
 .btn-success {
-    background-color: #009e73;
+    background-color: #56b4e9;
     color: #fff;
-    border: 1px solid #007a59;
+    border: 1px solid #56b4e9;
 }
 
 .btn-success:hover {
-    background-color: #007a59;
+    background-color: #0072b2;
 }
 
 /* Modal Styles */
