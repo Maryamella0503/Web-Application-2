@@ -47,3 +47,4 @@ document.addEventListener("DOMContentLoaded", function() {
 
     loadCrimeData(); // Call the function to load crime data
 });
+

@@ -160,6 +160,7 @@ def login():
         # Login logic
         pass
     return render_template('login.html')
+    
 
 @views.route('/send-emergency-alert', methods=['POST'])
 @login_required

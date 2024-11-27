@@ -128,6 +128,7 @@
                             <option value="Arson">Arson</option>
                             <option value="Public Order">Public Order</option>
                             <option value="Drugs">Drugs</option>
+                            <option value="Other">Other</option>
                         </select>
                     </div>
                     <div class="text-center">
@@ -287,5 +288,16 @@ document.addEventListener("DOMContentLoaded", () => {
         crimeTypeDropdown.addEventListener("change", showTipsAndPosts);
     }
 });
+
+function toggleOtherCrimeInput() {
+    const crimeTypeDropdown = document.getElementById("blog-crime-type");
+    const otherCrimeTypeContainer = document.getElementById("other-crime-type-container");
+
+    if (crimeTypeDropdown.value === "Other") {
+        otherCrimeTypeContainer.style.display = "block"; // Show the input field
+    } else {
+        otherCrimeTypeContainer.style.display = "none"; // Hide the input field
+    }
+}
 </script>
 {% endblock %}

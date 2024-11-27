@@ -4,7 +4,7 @@
 <div class="container">
     {% if user and user.is_authenticated %}
         <div class="text-center my-4">
-            <h2 class="welcome-title">Welcome to the Crime Detection App, jenn!</h2>
+            <h2 class="welcome-title">Welcome to the Crime Detection App, {{ user.username }}</h2>
             <p class="text-muted">Stay informed, stay safe. Track crime in your area with real-time data.</p>
         </div>
 

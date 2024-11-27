@@ -255,6 +255,16 @@ body:not(.modal-open) .modal-backdrop {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Optional: Shadow for better visibility */
 }
 
+/* Reset the text color for modal content */
+#postModal .modal-body {
+    color: #000; /* Change to black or any other desired color */
+}
+
+/* For specific parts, e.g., location */
+#postModal .modal-body p {
+    color: #484848; /* Ensure paragraphs are not red */
+}
+
 /* Overlay */
 .landing-page {
     display: flex;

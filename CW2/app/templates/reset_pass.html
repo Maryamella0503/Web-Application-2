@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
+<body class="landing-page">
     <div class="overlay">
         <div class="container h-100">
             <div class="row justify-content-center align-items-center h-100">
-                <div class="col-lg-4 col-md-6 col-sm-8"> <!-- Ensures proper scaling -->
+                <div class="col-lg-4 col-md-6 col-sm-8">
                     <div class="card shadow-lg p-5 rounded">
-                        <h1 class="text-center mb-4" style="font-size: 2.5rem; color: #80deea;">Login</h1>
+                        <h1 class="text-center mb-4" style="font-size: 2.5rem; color: #80deea;">Reset Password</h1>
 
                         <!-- Flash Messages -->
                         {% with messages = get_flashed_messages(with_categories=True) %}
@@ -21,30 +22,23 @@
                             {% endif %}
                         {% endwith %}
 
-                        <!-- Login Form -->
-                        <form method="POST" action="{{ url_for('auth.login') }}">
+                        <!-- Reset Password Form -->
+                        <form method="POST" action="{{ url_for('auth.reset_password') }}">
                             <div class="mb-4">
                                 <label for="email" class="form-label" style="color: #000000; font-size: 1.25rem;">Email</label>
                                 <input type="email" class="form-control shadow-sm" id="email" name="email" placeholder="Enter your email" required>
                             </div>
-
                             <div class="mb-4">
-                                <label for="password" class="form-label" style="color: #000000; font-size: 1.25rem;">Password</label>
-                                <input type="password" class="form-control shadow-sm" id="password" name="password" placeholder="Enter your password" required>
+                                <label for="new_password" class="form-label" style="color: #000000; font-size: 1.25rem;">New Password</label>
+                                <input type="password" class="form-control shadow-sm" id="new_password" name="new_password" placeholder="Enter your new password" required>
+                            </div>
+                            <div class="mb-4">
+                                <label for="confirm_password" class="form-label" style="color: #000000; font-size: 1.25rem;">Confirm Password</label>
+                                <input type="password" class="form-control shadow-sm" id="confirm_password" name="confirm_password" placeholder="Confirm your new password" required>
                             </div>
 
-                            <button type="submit" class="btn btn-primary w-100" style="font-size: 1.25rem; padding: 12px;">Log In</button>
+                            <button type="submit" class="btn btn-primary w-100" style="font-size: 1.25rem; padding: 12px;">Reset Password</button>
                         </form>
-                        
-                        <div class="text-center mt-3">
-                            <p style="color: #000000; font-size: 1rem;">
-                                Forgot your password? <a href="{{ url_for('auth.reset_password') }}" style="color: #80deea; text-decoration: underline;">Reset it here.</a>
-                            </p>
-                        </div>
-
-                        <div class="text-center mt-4">
-                            <p style="color: #000000; font-size: 1rem;">Don't have an account? <a href="{{ url_for('auth.register') }}" style="color: #80deea; text-decoration: underline;">Register here.</a></p>
-                        </div>
                     </div>
                 </div>
             </div>
