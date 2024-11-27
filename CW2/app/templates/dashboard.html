@@ -43,13 +43,13 @@
                     <div class="form-check d-flex align-items-center">
                         <input class="form-check-input me-2" type="checkbox" name="crime_preferences" value="{{ crime }}" id="crime-{{ crime|lower|replace(' ', '-') }}" 
                                {% if user.crime_preferences and crime in user.crime_preferences %}checked{% endif %}>
-                        <label class="form-check-label" for="crime-{{ crime|lower|replace(' ', '-') }}" style="font-size: 1.5rem;">{{ crime }}</label>
+                        <label class="form-check-label" for="crime-{{ crime|lower|replace(' ', '-') }}" style="font-size: 1.2rem;">{{ crime }}</label>
                     </div>
                     {% endfor %}
                 </div>
                 <div class="text-center mt-4 d-flex justify-content-center align-items-center gap-3">
-                    <button type="button" class="btn btn-primary" id="select-all-btn" style="width: 160px; height: 50px; font-size: 20px;">Select All</button>
-                    <button type="submit" class="btn btn-success" id="save-preferences-btn" style="width: 160px; height: 50px; font-size: 15px;">Save Preferences</button>
+                    <button type="button" class="btn btn-primary" id="select-all-btn" style="width: 180px; height: 50px; font-size: 20px;">Select All</button>
+                    <button type="submit" class="btn btn-success" id="save-preferences-btn" style="width: 180px; height: 70px; font-size: 20px;">Save Preferences</button>
                 </div>
             </form>
         </div>
