@@ -20,12 +20,26 @@ main {
     src: url('font1.ttf') format('truetype');
 }
 
+@font-face {
+    font-family: 'font2';
+    src: url('font2.otf') format('truetype');
+}
+
 .title-heading {
     font-family: 'font1';
     font-size: 3rem;
     font-weight: 600;
     color: #000;
     text-align: center;
+}
+
+.welcome-title {
+    font-family: 'font2', sans-serif; /* Replace with your desired font */
+    font-size: 2.5rem; /* Adjust the size */
+    font-weight: bold; /* Make it bold */
+    color: #333333; /* Adjust the color */
+    text-align: center; /* Center the text */
+    margin-top: 20px; /* Add spacing from the top */
 }
 
 .flash-messages, .alert {
@@ -229,18 +243,40 @@ body:not(.modal-open) .modal-backdrop {
 
 .modal-content {
     z-index: 1060; /* Ensure modal content is fully interactive */
+    border: 5px solid #2e3425; /* Thicker border with green color */
+    border-radius: 12px; /* Optional: Maintain rounded corners */
+    padding: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Optional: Shadow for better visibility */
 }
 
 /* Overlay */
 .landing-page {
-    display: none; /* Hidden by default */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Full viewport height */
+    width: 100%; /* Full width */
+    background: linear-gradient(120deg, #e0f7fa, #80deea); /* Background gradient */
+    z-index: 1; /* Base z-index */
+    position: relative;
+}
+
+.overlay {
+    z-index: 2; /* Ensure above background */
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent */
-    z-index: 1040; /* Below modals but above other content */
+    width: 100%;
+}
+
+.card {
+    background-color: #fff; /* White background for form */
+    z-index: 3; /* Ensure above overlay */
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Card shadow */
+    border-radius: 10px; /* Smooth edges */
 }
 
 /* Show overlay */

@@ -152,6 +152,15 @@ def login():
     
     return render_template('login.html')
 
+@auth.route('/login', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard'))
+    if request.method == 'POST':
+        # Login logic
+        pass
+    return render_template('login.html')
+
 @views.route('/send-emergency-alert', methods=['POST'])
 @login_required
 def send_emergency_alert():
