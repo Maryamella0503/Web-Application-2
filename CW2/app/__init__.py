@@ -1,4 +1,5 @@
 from flask import Flask
+import os
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
@@ -15,6 +16,7 @@ scheduler = BackgroundScheduler()
 
 def create_app():
     app = Flask(__name__)
+    app = Flask(__name__, static_folder="static")
     app.config.from_object(Config)
 
     # Initialize extensions with the app
@@ -88,4 +90,7 @@ def create_app():
         if scheduler.running:
             scheduler.shutdown(wait=False)
 
+    if os.getenv("RENDER"):
+        app.run(host="0.0.0.0", port=int(os.getenv("PORT", 10000)))
+    
     return app
