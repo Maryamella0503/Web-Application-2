@@ -16,8 +16,6 @@ scheduler = BackgroundScheduler()
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     # Initialize extensions with the app
     db.init_app(app)
@@ -30,7 +28,7 @@ def create_app():
     from app.views import views,blog
     from app.auth import auth
     from app.api import api
-    
+
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/auth')
     app.register_blueprint(api, url_prefix='/api')

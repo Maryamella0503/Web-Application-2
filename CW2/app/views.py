@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
-from app.models import User, CrimeReport, CrimeType, SafetyTip, BlogPost, Like
+from app.models import User, CrimeReport, CrimeType, SafetyTip, BlogPost
 from app.forms import RegistrationForm, LoginForm
 from app import db, mail, create_app
 import os
@@ -452,19 +452,6 @@ def blog_page():
     print(f"Posts: {posts}")  # Debugging: Check if posts are being retrieved
     return render_template('blog.html', posts=posts)
 
-@blog.route('/like/<int:post_id>', methods=['POST'])
-@login_required
-def like_post(post_id):
-    post = BlogPost.query.get_or_404(post_id)
-    like = Like.query.filter_by(user_id=current_user.id, post_id=post.id).first()
-    if like:
-        db.session.delete(like)  # Unlike the post
-    else:
-        new_like = Like(user_id=current_user.id, post_id=post.id)
-        db.session.add(new_like)
-    db.session.commit()
-    return jsonify({'likes': post.likes.count()})
-
 @blog.route('/api/blog-posts', methods=['GET'])
 def get_blog_posts():
     crime_type = request.args.get('crime_type')  # Get crime_type from query params
@@ -487,7 +474,6 @@ def get_blog_posts():
             'crime_type': post.crime_type,
             'author': post.author.username if post.author else 'Unknown',
             'created_at': post.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-            'likes': post.likes.count()
         }
         for post in posts
     ]

@@ -61,9 +61,3 @@ class BlogPost(db.Model):
     crime_type = db.Column(db.String(50), nullable=False)
     created_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     author = db.relationship('User', backref='blog_posts', lazy=True)  # Ensure correct backref here
-
-class Like(db.Model):
-    __tablename__ = 'like'
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    post_id = db.Column(db.Integer, db.ForeignKey('blog_post.id'), nullable=False)

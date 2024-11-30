@@ -4,22 +4,10 @@
     <div class="overlay">
         <div class="container h-100">
             <div class="row justify-content-center align-items-center h-100">
-                <div class="col-lg-4 col-md-6 col-sm-8"> <!-- Ensures proper scaling -->
-                    <div class="card shadow-lg p-5 rounded">
+                <!-- Adjust the column width for the card -->
+                <div class="col-lg-6 col-md-8 col-sm-10"> <!-- Increased column width -->
+                    <div class="card shadow-lg p-5 rounded" style="max-width: 600px; margin: auto;"> <!-- Added max-width -->
                         <h1 class="text-center mb-4" style="font-size: 2.5rem; color: #80deea;">Login</h1>
-
-                        <!-- Flash Messages -->
-                        {% with messages = get_flashed_messages(with_categories=True) %}
-                            {% if messages %}
-                                <div class="mb-3">
-                                    {% for category, message in messages %}
-                                        <div class="alert alert-{{ category }}" role="alert">
-                                            {{ message }}
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                        {% endwith %}
 
                         <!-- Login Form -->
                         <form method="POST" action="{{ url_for('auth.login') }}">

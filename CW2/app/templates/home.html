@@ -48,7 +48,6 @@
                             const groupedCrimes = {};
                             const heatmapData = [];
 
-                            // Group crimes by coordinates and add to heatmap
                             data.forEach(crime => {
                                 const key = `${crime.latitude},${crime.longitude}`;
                                 if (!groupedCrimes[key]) {
