@@ -195,7 +195,7 @@ form .crime-preferences-buttons button {
 }
 
 button, .btn {
-    font-size: 16px;
+    font-size: 1.2em;
     transition: background-color 0.3s ease;
 }
 
@@ -219,21 +219,19 @@ button, .btn {
     background-color: #0072b2;
 }
 
-.btn-warning {
-    background-color: #ffc107; /* Default color */
-    color: #000; /* Text color */
-    border: none; /* Optional: remove border */
-    transition: background-color 0.3s ease; /* Smooth transition */
+.btn-custom {
+    background-color: #56b4e9; /* Your custom color */
+    color: #fff; /* Text color */
+    font-size: 1.2rem; /* Optional: Adjust font size */
+    border: none; /* Optional: Remove border */
+    padding: 8px 15px; /* Optional: Adjust padding */
+    border-radius: 5px; /* Optional: Smooth corners */
+    transition: background-color 0.3s ease; /* Optional: Add transition effect */
 }
 
-.btn-warning:hover {
-    background-color: #e0a800; /* Slightly darker shade on hover */
-    color: #000; /* Ensure text color remains consistent */
-}
-
-.btn-warning:hover {
-    background-color: #e0a800 !important;
-    color: #000 !important;
+.btn-custom:hover {
+    background-color: #0072b2;
+    color: #fff; /* Optional: Change text color on hover */
 }
 
 .modal-backdrop {
