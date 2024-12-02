@@ -4,12 +4,10 @@
     <div class="overlay">
         <div class="container h-100">
             <div class="row justify-content-center align-items-center h-100">
-                <!-- Adjust the column width for proper alignment -->
-                <div class="col-lg-6 col-md-8 col-sm-10"> <!-- Wider column for better spacing -->
-                    <div class="card shadow-lg p-5 rounded" style="max-width: 600px; margin: auto;"> <!-- Centered card with max-width -->
+                <div class="col-lg-6 col-md-8 col-sm-10"> 
+                    <div class="card shadow-lg p-5 rounded" style="max-width: 600px; margin: auto;">
                         <h1 class="text-center mb-4" style="color: #80deea; font-size: 2.5rem;">Register</h1>
 
-                        <!-- Flash Messages -->
                         {% with messages = get_flashed_messages(with_categories=True) %}
                             {% if messages %}
                                 <div class="mb-3">
@@ -22,7 +20,6 @@
                             {% endif %}
                         {% endwith %}
 
-                        <!-- Registration Form -->
                         <form method="POST">
                             <div class="mb-3">
                                 <label for="username" class="form-label" style="font-size: 1.2rem;">Username</label>

@@ -4,12 +4,11 @@
     <div class="overlay">
         <div class="container h-100">
             <div class="row justify-content-center align-items-center h-100">
-                <!-- Adjust the column width for the card -->
-                <div class="col-lg-6 col-md-8 col-sm-10"> <!-- Increased column width -->
-                    <div class="card shadow-lg p-5 rounded" style="max-width: 600px; margin: auto;"> <!-- Added max-width -->
+
+                <div class="col-lg-6 col-md-8 col-sm-10"> 
+                    <div class="card shadow-lg p-5 rounded" style="max-width: 600px; margin: auto;">
                         <h1 class="text-center mb-4" style="font-size: 2.5rem; color: #80deea;">Login</h1>
 
-                        <!-- Login Form -->
                         <form method="POST" action="{{ url_for('auth.login') }}">
                             <div class="mb-4">
                                 <label for="email" class="form-label" style="color: #000000; font-size: 1.25rem;">Email</label>

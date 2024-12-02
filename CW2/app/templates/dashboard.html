@@ -3,13 +3,10 @@
 {% block content %}
 <div class="container py-3">
     <div class="text-center mb-4">
-        <!-- Account Icon -->
         <i class="fas fa-user-circle" style="font-size: 4rem; color: #4caf50;"></i>
-        <!-- Dashboard Header -->
         <h2 class="welcome-title">{{ user.username }}'s Dashboard</h2>
     </div>
 
-    <!-- User Info Section -->
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <h4 class="card-title text-center" style="font-size: 1.5rem;">User Information</h4>
@@ -33,7 +30,6 @@
         </div>
     </div>
 
-    <!-- Crime Preferences Section -->
     <div class="card shadow-sm">
         <div class="card-body">
             <h4 class="card-title text-center" style="font-size: 1.5rem;">Preferred Crime Types</h4>
@@ -61,7 +57,6 @@
     </div>
 </div>
 
-<!-- Edit Modal -->
 <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -96,7 +91,6 @@
     </div>
 </div>
 
-<!-- Reset Password Modal -->
 <div class="modal fade" id="resetPasswordModal" tabindex="-1" aria-labelledby="resetPasswordModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -127,7 +121,6 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // "Select All" button functionality
         const selectAllBtn = document.getElementById("select-all-btn");
         const checkboxes = document.querySelectorAll('input[name="crime_preferences"]');
 
@@ -135,11 +128,9 @@
             const allSelected = Array.from(checkboxes).every(checkbox => checkbox.checked);
             checkboxes.forEach(checkbox => checkbox.checked = !allSelected);
 
-            // Update button text based on state
             selectAllBtn.textContent = allSelected ? "Select All" : "Deselect All";
         });
 
-        // Dynamically update button text based on checkbox state
         checkboxes.forEach(checkbox => {
             checkbox.addEventListener("change", function () {
                 const allSelected = Array.from(checkboxes).every(checkbox => checkbox.checked);
