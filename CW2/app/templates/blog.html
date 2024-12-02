@@ -57,6 +57,9 @@
                             onclick="showPostDetails('{{ post.title }}', '{{ post.location }}', '{{ post.crime_type }}', '{{ post.description }}', '{{ post.author.username}}')">
                             View More
                         </button>
+                        <form method="POST" action="{{ url_for('blog.delete_post', post_id=post.id) }}">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -83,6 +86,10 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <form id="deletePostForm" method="POST">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
             </div>
         </div>
     </div>
@@ -201,6 +208,7 @@
             "Support local community initiatives to address and reduce drug-related crimes."
         ]
     };
+    
 function showTipsAndPosts() {
     const selectedCrime = document.getElementById("crime_type").value;
 
@@ -286,5 +294,18 @@ function toggleOtherCrimeInput() {
         otherCrimeTypeContainer.style.display = "none";
     }
 }
+
+function showPostDetails(title, location, crimeType, description, author, postId) {
+    document.getElementById("modalTitle").innerText = title || "No Title Provided";
+    document.getElementById("modalLocation").innerText = location || "No Location Provided";
+    document.getElementById("modalCrimeType").innerText = crimeType || "No Crime Type Provided";
+    document.getElementById("modalDescription").innerText = description || "No Description Provided";
+    document.getElementById("modalAuthor").innerText = author || "Unknown Author";
+
+    // Set action for delete form
+    const deleteForm = document.getElementById("deletePostForm");
+    deleteForm.action = `/delete_post/${postId}`;
+}
+
 </script>
 {% endblock %}

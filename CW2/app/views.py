@@ -203,45 +203,21 @@ def update_preferences():
         flash('No preferences selected. Please choose at least one.', 'error')
     return redirect(url_for('views.dashboard'))
 
-def send_crime_alert_email(user_email, crime_details):
-    msg = Message(
-        "Crime Alert!",
-        sender="your-email@example.com",
-        recipients=[user_email]
-    )
-    msg.body = f"A crime has been reported near your location: {crime_details}"
-    mail.send(msg)
+@blog.route('/delete_post/<int:post_id>', methods=['POST'])
+@login_required
+def delete_post(post_id):
+    post = BlogPost.query.get_or_404(post_id)
+
+    # Ensure only the creator can delete their post
+    if post.created_by != current_user.id:
+        flash('You do not have permission to delete this post.', 'error')
+        return redirect(url_for('blog.blog_page'))
+
+    db.session.delete(post)
+    db.session.commit()
+    flash('Post deleted successfully!', 'success')
+    return redirect(url_for('blog.blog_page'))
     
-def check_for_crime_alerts():
-    app = create_app()  # Create the app instance
-    with app.app_context():  # Use the app context
-        users = User.query.all()
-        crimes = CrimeReport.query.all()
-
-        for user in users:
-            if not user.bookmarked_locations:
-                continue  # Skip users without bookmarked locations
-            
-            user_coords = tuple(map(float, user.bookmarked_locations.split(',')))
-            preferences = user.crime_preferences.split(',') if user.crime_preferences else []
-
-            for crime in crimes:
-                if crime.title not in preferences:
-                    continue  # Skip crimes not in user's preferences
-                
-                crime_coords = (crime.latitude, crime.longitude)
-                distance = geodesic(user_coords, crime_coords).km
-
-                if distance <= user.notification_radius:
-                    crime_details = (
-                        f"{crime.title} reported at {crime.location} on {crime.date_reported.strftime('%Y-%m-%d')}"
-                    )
-                    send_crime_alert_email(user.email, crime_details)
-
-scheduler = BackgroundScheduler()
-scheduler.add_job(check_for_crime_alerts, 'interval', minutes=5)
-scheduler.start()
-
 def send_crime_summary():
     users = User.query.filter_by(summary_preference='daily').all()
     today = datetime.now().date()
@@ -251,9 +227,6 @@ def send_crime_summary():
         crime_details = "\n".join([f"{crime.title}: {crime.description}" for crime in crimes_today])
         send_crime_alert_email(user.email, crime_details)
 
-scheduler.add_job(send_crime_summary, 'cron', hour=8)
-
-# Add at the bottom of views.py
 import logging
 from app import create_app
 from geopy.distance import geodesic

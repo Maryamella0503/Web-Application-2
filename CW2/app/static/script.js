@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }).addTo(map);
 
     // Initialize heatmap points
-    var heatmapPoints = []; // Empty array initially
+    var heatmapPoints = [];
 
     // Heatmap layer setup
     var heatmapLayer = L.heatLayer(heatmapPoints, {

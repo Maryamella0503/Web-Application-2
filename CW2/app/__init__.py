@@ -56,7 +56,6 @@ def create_app():
                 db.session.add(CrimeType(name=crime_name))
                 print(f"Added Crime Type: {crime_name}")
         db.session.commit()
-        print("Crime types populated!")
 
     with app.app_context():
         try:
@@ -72,7 +71,7 @@ def create_app():
 
     @app.teardown_appcontext
     def shutdown_scheduler(exception=None):
-        """Shutdown the scheduler when the app context is torn down."""
+        # Shutdown the scheduler when the app context is torn down
         if scheduler.running:
             scheduler.shutdown(wait=False)
 

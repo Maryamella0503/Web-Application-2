@@ -234,6 +234,17 @@ button, .btn {
     color: #fff; /* Optional: Change text color on hover */
 }
 
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
 .modal-backdrop {
     z-index: 1050;
     display: none;
