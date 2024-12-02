@@ -1,13 +1,13 @@
 html, body {
-    height: 100%; /* Full viewport height */
+    height: 100%;
     margin: 0;
     padding: 0;
     font-family: 'Arial', sans-serif;
-    font-size: 18px; /* General font size */
-    background: linear-gradient(120deg, #e0f7fa, #80deea); /* Gradient background */
+    font-size: 18px;
+    background: linear-gradient(120deg, #e0f7fa, #80deea);
     background-size: cover;
     background-repeat: no-repeat;
-    overflow-x: hidden; /* Prevent horizontal scroll */
+    overflow-x: hidden;
 }
 
 main {
@@ -34,12 +34,12 @@ main {
 }
 
 .welcome-title {
-    font-family: 'font2', sans-serif; /* Replace with your desired font */
-    font-size: 2.5rem; /* Adjust the size */
-    font-weight: bold; /* Make it bold */
-    color: #333333; /* Adjust the color */
-    text-align: center; /* Center the text */
-    margin-top: 20px; /* Add spacing from the top */
+    font-family: 'font2', sans-serif;
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #333333;
+    text-align: center;
+    margin-top: 20px;
 }
 
 .flash-messages, .alert {
@@ -65,16 +65,15 @@ p {
     margin-top: 20px;
 }
 
-/* Navbar */
 nav {
     display: flex;
     justify-content: space-around;
     background-color: #333;
     padding: 1rem;
-    position: fixed; /* Sticks navbar to the top */
+    position: fixed;
     top: 0;
     width: 100%;
-    z-index: 1030; /* Ensures it stays above other content */
+    z-index: 1030;
 }
 
 nav ul {
@@ -99,7 +98,6 @@ nav a:hover {
     font-weight: bold;
 }
 
-/* General styles for the form */
 form {
     display: flex;
     flex-direction: column;
@@ -107,70 +105,65 @@ form {
     color: rgb(0, 0, 0);
 }
 
-/* Group styles for the crime preferences section */
 form .crime-preferences {
     display: flex;
     flex-wrap: wrap;
     gap: 1.5rem;
-    font-size: 1rem; /* Adjust font size for crime types */
+    font-size: 1rem;
 }
 
-/* Specific styling for crime checkboxes */
 form .crime-preferences .form-check {
     display: flex;
     align-items: center;
 }
 
-/* Styling for the labels of crime types */
 form .crime-preferences .form-check-label {
     font-size: 1.25rem;
     font-weight: bold;
 }
 
 .form-check-label {
-    font-size: 1.25rem; /* Adjust to the desired size */
-    font-weight: normal; /* Optional: Adjust the weight */
-    color: #333; /* Optional: Adjust the color */
+    font-size: 1.25rem;
+    font-weight: normal;
+    color: #333;
 }
 
-/* Individual colors for each crime type */
 form .crime-preferences #crime-robbery + label {
-    color: #FF5733; /* Orange for Robbery */
+    color: #FF5733;
 }
 
 form .crime-preferences #crime-assault + label {
-    color: #C70039; /* Red for Assault */
+    color: #C70039;
 }
 
 form .crime-preferences #crime-burglary + label {
-    color: #900C3F; /* Dark Red for Burglary */
+    color: #900C3F;
 }
 
 form .crime-preferences #crime-vehicle-crime + label {
-    color: #DAF7A6; /* Light Green for Vehicle Crime */
+    color: #DAF7A6;
 }
 
 form .crime-preferences #crime-shoplifting + label {
-    color: #FFC300; /* Yellow for Shoplifting */
+    color: #FFC300;
 }
 
 form .crime-preferences #crime-antisocial-behaviour + label {
-    color: #581845; /* Purple for Antisocial Behaviour */
+    color: #581845;
 }
 
 form .crime-preferences #crime-arson + label {
-    color: #FF5733; /* Bright Orange for Arson */
+    color: #FF5733;
 }
 
 form .crime-preferences #crime-public-order + label {
-    color: #2ECC71; /* Green for Public Order */
+    color: #2ECC71;
 }
 
 form .crime-preferences #crime-drugs + label {
-    color: #3498DB; /* Blue for Drugs */
+    color: #3498DB;
 }
 
-/* Styling for the "Select All" and "Save Preferences" buttons */
 form .crime-preferences-buttons {
     display: flex;
     justify-content: center;
@@ -186,7 +179,6 @@ form .crime-preferences-buttons button {
     text-align: center;
 }
 
-/* Card Styles */
 .card {
     background-color: #f5f5f5;
     color: #333;
@@ -195,14 +187,13 @@ form .crime-preferences-buttons button {
     padding: 20px;
     margin: auto;
     max-width: 500px;
-    z-index: 1020; /* Ensures it stays above overlays */
+    z-index: 1020;
 }
 
 .card-text {
     color: #0072b2;
 }
 
-/* Buttons */
 button, .btn {
     font-size: 16px;
     transition: background-color 0.3s ease;
@@ -228,57 +219,52 @@ button, .btn {
     background-color: #0072b2;
 }
 
-/* Modal Styles */
-/* Prevent lingering overlays from blocking content */
 .modal-backdrop {
-    z-index: 1050; /* Default Bootstrap backdrop z-index */
-    display: none; /* Ensure hidden when modal is closed */
+    z-index: 1050;
+    display: none;
 }
 
 body.modal-open {
-    overflow: hidden; /* Prevent scrolling when modal is open */
+    overflow: hidden;
 }
 
 body:not(.modal-open) .modal-backdrop {
-    display: none; /* Hide any lingering backdrops */
+    display: none;
 }
 
 .modal {
-    z-index: 1055; /* Ensure modal stays above backdrop */
+    z-index: 1055;
 }
 
 .modal-content {
-    z-index: 1060; /* Ensure modal content is fully interactive */
-    border: 5px solid #2e3425; /* Thicker border with green color */
-    border-radius: 12px; /* Optional: Maintain rounded corners */
+    z-index: 1060;
+    border: 5px solid #2e3425;
+    border-radius: 12px;
     padding: 15px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Optional: Shadow for better visibility */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Reset the text color for modal content */
 #postModal .modal-body {
-    color: #000; /* Change to black or any other desired color */
+    color: #000;
 }
 
-/* For specific parts, e.g., location */
 #postModal .modal-body p {
-    color: #484848; /* Ensure paragraphs are not red */
+    color: #484848;
 }
 
-/* Overlay */
 .landing-page {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100vh; /* Full viewport height */
-    width: 100%; /* Full width */
-    background: linear-gradient(120deg, #e0f7fa, #80deea); /* Background gradient */
-    z-index: 1; /* Base z-index */
+    height: 100vh;
+    width: 100%;
+    background: linear-gradient(120deg, #e0f7fa, #80deea);
+    z-index: 1;
     position: relative;
 }
 
 .overlay {
-    z-index: 2; /* Ensure above background */
+    z-index: 2;
     position: relative;
     display: flex;
     align-items: center;
@@ -288,21 +274,19 @@ body:not(.modal-open) .modal-backdrop {
 }
 
 .card {
-    background-color: #fff; /* White background for form */
-    z-index: 3; /* Ensure above overlay */
+    background-color: #fff;
+    z-index: 3;
     position: relative;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Card shadow */
-    border-radius: 10px; /* Smooth edges */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
 }
 
-/* Show overlay */
 body.overlay-active .landing-page {
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-/* Responsive Fixes */
 @media (max-width: 768px) {
     nav {
         flex-direction: column;

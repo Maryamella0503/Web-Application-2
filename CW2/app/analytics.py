@@ -52,7 +52,7 @@ def predict_crime_hotspots():
     coordinates_np = np.array(coordinates)
 
     # Use KMeans clustering to identify hotspots
-    kmeans = KMeans(n_clusters=5)  # You can adjust the number of clusters
+    kmeans = KMeans(n_clusters=5)
     kmeans.fit(coordinates_np)
     hotspots = kmeans.cluster_centers_
 
