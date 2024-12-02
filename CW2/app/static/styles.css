@@ -219,6 +219,23 @@ button, .btn {
     background-color: #0072b2;
 }
 
+.btn-warning {
+    background-color: #ffc107; /* Default color */
+    color: #000; /* Text color */
+    border: none; /* Optional: remove border */
+    transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+.btn-warning:hover {
+    background-color: #e0a800; /* Slightly darker shade on hover */
+    color: #000; /* Ensure text color remains consistent */
+}
+
+.btn-warning:hover {
+    background-color: #e0a800 !important;
+    color: #000 !important;
+}
+
 .modal-backdrop {
     z-index: 1050;
     display: none;
