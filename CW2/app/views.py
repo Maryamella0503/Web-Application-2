@@ -26,14 +26,13 @@ def home():
         api_success = fetch_crime_data_from_api()
         data_source = "API" if api_success else "Backup CSV"
     except Exception as e:
-        print(f"Failed to fetch data from API: {e}")
         api_success = False
         data_source = "Backup CSV"
 
+    # Load from backup CSV here if needed
     if not api_success:
         backup_csv_path = os.path.join(current_app.root_path, 'static', '2024-09-west-yorkshire-street.csv')
-        # Load from backup CSV here if needed
-
+        
     crimes = CrimeReport.query.all()
 
     # Filter crimes based on user preferences if logged in
@@ -99,7 +98,6 @@ def register():
             return redirect(url_for('views.home'))
         except Exception as e:
             db.session.rollback()
-            print(f"Error during user registration: {e}")  # Debugging output
             flash('An error occurred during registration. Please try again.', category='error')
             return render_template('register.html')
 
@@ -110,11 +108,9 @@ def register():
 @login_required
 def get_crime_data():
     preferences = current_user.crime_preferences.split(',') if current_user.crime_preferences else []
-    print(f"User preferences: {preferences}")  # Debugging preferences
 
     # Fetch crimes matching the user's preferences
     crimes = CrimeReport.query.filter(CrimeReport.title.in_(preferences)).all()
-    print(f"Filtered crimes: {len(crimes)}")  # Debugging filtered crimes count
 
     data = [
         {
@@ -319,9 +315,6 @@ def test_alerts():
 
     return jsonify({"message": "No alerts triggered."})
 
-def send_crime_alert_email(user_email, crime_details):
-    print(f"Simulated Email: To {user_email}, Details: {crime_details}")
-
 @views.route('/trigger-alerts')
 def trigger_alerts():
     check_for_crime_alerts()
@@ -411,9 +404,7 @@ def populate_crime_types():
     for crime_name in sample_types:
         if not CrimeType.query.filter_by(name=crime_name).first():
             db.session.add(CrimeType(name=crime_name))
-            print(f"Added Crime Type: {crime_name}")  # Debug
     db.session.commit()
-    print("Crime types populated!")  # Debug
 
 @views.route('/debug-crime-types')
 def debug_crime_types():
@@ -455,14 +446,11 @@ def blog_page():
 @blog.route('/api/blog-posts', methods=['GET'])
 def get_blog_posts():
     crime_type = request.args.get('crime_type')  # Get crime_type from query params
-    print(f"Filtering for crime_type: {crime_type}")  # Debugging log
 
     if crime_type:
         posts = BlogPost.query.filter_by(crime_type=crime_type).all()  # Filter posts
     else:
         posts = BlogPost.query.all()
-
-    print(f"Filtered Posts: {posts}")  # Debugging log
 
     # Serialize posts for JSON response
     posts_data = [

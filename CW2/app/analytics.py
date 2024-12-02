@@ -28,7 +28,6 @@ def load_crime_data(file_path):
 
     # Commit all changes to the database
     db.session.commit()
-    print("Data imported successfully!")
 
 def predict_crime_hotspots():
     """Function to predict crime hotspots using clustering."""
@@ -56,5 +55,4 @@ def predict_crime_hotspots():
     kmeans.fit(coordinates_np)
     hotspots = kmeans.cluster_centers_
 
-    print("Crime hotspots predicted successfully!")
     return hotspots

@@ -86,7 +86,6 @@ def seed_database():
                         print(f"Added Tip: {tip_content} for Crime Type: {crime_type_name}")
         
         db.session.commit()
-        print("Database seeding completed.")
 
 if __name__ == "__main__":
     seed_database()

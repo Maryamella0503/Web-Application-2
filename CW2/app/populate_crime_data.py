@@ -32,4 +32,3 @@ def load_crime_data(file_path, from_api=False):
 
     # Commit all changes to the database
     db.session.commit()
-    print("Data imported successfully!")

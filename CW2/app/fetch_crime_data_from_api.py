@@ -40,9 +40,7 @@ def fetch_crime_data_from_api():
 
         # Commit the changes to the database
         db.session.commit()
-        print("Data imported successfully from the API!")
         return True
 
     except Exception as e:
-        print(f"Failed to fetch data from API: {e}")
         return False
