@@ -67,11 +67,6 @@ def create_app():
             crime_data_path = '/Users/maryamellathy/Desktop/Web Application 2/CW2/app/static/2024-09-west-yorkshire-street.csv'
             load_crime_data(crime_data_path)
 
-            from app.check_for_crime_alerts import check_for_crime_alerts
-            if not scheduler.running:
-                scheduler.add_job(func=check_for_crime_alerts, trigger="interval", minutes=10)
-                scheduler.start()
-
         except Exception as e:
             app.logger.error(f"Error during app initialization: {e}")
 
