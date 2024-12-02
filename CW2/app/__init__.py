@@ -45,7 +45,7 @@ def create_app():
         return User.query.get(int(user_id))
 
     def seed_crime_types():
-        """Populate the CrimeType table with default values."""
+        # Populate the CrimeType table with default values
         from app.models import CrimeType
         sample_types = [
             "Theft", "Assault", "Burglary", "Vehicle Crime", "Shoplifting",

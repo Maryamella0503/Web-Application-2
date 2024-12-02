@@ -4,12 +4,11 @@ from app.models import CrimeReport
 from datetime import datetime
 
 def fetch_crime_data_from_api():
-    """Function to fetch data from the crime data API and load it into the database."""
+    #Function to fetch data from the crime data API and load it into the database
     try:
-        # Example API URL - replace with the correct one
         api_url = "https://data.police.uk/api/crimes-street/all-crime?lat=53.8008&lng=-1.5491"
         response = requests.get(api_url)
-        response.raise_for_status()  # Raise an exception for HTTP errors
+        response.raise_for_status()
         crimes = response.json()
 
         # Clear existing data to avoid duplicates
@@ -31,7 +30,7 @@ def fetch_crime_data_from_api():
             new_report = CrimeReport(
                 title=category,
                 description=description,
-                location=None,  # Update if you have a valid location
+                location=None,
                 date_reported=date_reported,
                 latitude=latitude,
                 longitude=longitude

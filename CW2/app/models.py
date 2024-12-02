@@ -18,22 +18,22 @@ class User(UserMixin, db.Model):
     home_address = db.Column(db.String(255))
     work_address = db.Column(db.String(255))
     emergency_contact = db.Column(db.String(150))
-    bookmarked_locations = db.Column(db.String(500))  # Can store multiple locations as a string
-    notification_radius = db.Column(db.Float, default=1.0)  # Radius in km
-    crime_preferences = db.Column(db.String(500), nullable=True, default="")  # Default value is an empty string
+    bookmarked_locations = db.Column(db.String(500))
+    notification_radius = db.Column(db.Float, default=1.0)
+    crime_preferences = db.Column(db.String(500), nullable=True, default="")
 
 
     def set_password(self, password):
-        self.password = generate_password_hash(password)  # Corrected to use 'self.password'
+        self.password = generate_password_hash(password)
 
     def check_password(self, password):
-        return check_password_hash(self.password, password)  # Corrected to use 'self.password'
+        return check_password_hash(self.password, password)
 
 # CrimeReport Model
 class CrimeReport(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(150), nullable=False)
-    description = db.Column(db.Text, nullable=True)  # Changed to nullable=True
+    description = db.Column(db.Text, nullable=True)
     location = db.Column(db.String(150), nullable=False)
     date_reported = db.Column(db.DateTime, nullable=False)
     latitude = db.Column(db.Float, nullable=True)
@@ -60,4 +60,4 @@ class BlogPost(db.Model):
     description = db.Column(db.Text, nullable=False)
     crime_type = db.Column(db.String(50), nullable=False)
     created_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    author = db.relationship('User', backref='blog_posts', lazy=True)  # Ensure correct backref here
+    author = db.relationship('User', backref='blog_posts', lazy=True)

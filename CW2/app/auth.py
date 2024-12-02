@@ -33,7 +33,7 @@ def register():
             db.session.commit()
             login_user(new_user)
             flash('Account created!', category='success')
-            return redirect(url_for('views.dashboard'))  # Redirect to the dashboard
+            return redirect(url_for('views.dashboard'))
 
     return render_template('register.html')
 
@@ -47,7 +47,7 @@ def login():
         if user and check_password_hash(user.password, password):
             login_user(user)
             flash('Logged in successfully!', 'success')
-            return redirect(url_for('views.dashboard'))  # Redirect to the dashboard
+            return redirect(url_for('views.dashboard'))
         else:
             flash('Invalid email or password.', 'danger')
 

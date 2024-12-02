@@ -14,7 +14,6 @@ def seed_database():
         for crime_name in sample_types:
             if not CrimeType.query.filter_by(name=crime_name).first():
                 db.session.add(CrimeType(name=crime_name))
-                print(f"Added Crime Type: {crime_name}")
 
         # Seed SafetyTip
         tips_data = {

@@ -6,8 +6,8 @@ import numpy as np
 from sklearn.cluster import KMeans
 
 def load_crime_data(file_path):
-    """Function to load crime data from a CSV file into the database."""
-    # Load the CSV file using pandas
+    
+    # Function to load crime data from a CSV file into the database
     data = pd.read_csv(file_path)
 
     # Iterate over each row and create CrimeReport objects to add to the database
@@ -17,21 +17,19 @@ def load_crime_data(file_path):
 
         # Create a new CrimeReport object
         crime_report = CrimeReport(
-            title=row['Crime type'],  # Ensure 'Crime_Type' is a valid column in your CSV
+            title=row['Crime type'],
             description=description,
-            location=row['Location'],  # Ensure 'Location' is a valid column in your CSV
-            date_reported=datetime.strptime(row['Month'], '%Y-%m'),  # Adjust the date format if needed
-            longitude=row['Longitude'],  # Ensure 'Longitude' is a valid column
-            latitude=row['Latitude']  # Ensure 'Latitude' is a valid column
+            location=row['Location'],
+            date_reported=datetime.strptime(row['Month'], '%Y-%m'),
+            longitude=row['Longitude'],
+            latitude=row['Latitude']
         )
         db.session.add(crime_report)
 
-    # Commit all changes to the database
     db.session.commit()
 
 def predict_crime_hotspots():
-    """Function to predict crime hotspots using clustering."""
-    # Fetch all crime reports from the database
+    # Function to predict crime hotspots using clustering
     reports = CrimeReport.query.all()
 
     # Extract locations from the reports (Assuming location format is 'latitude,longitude')

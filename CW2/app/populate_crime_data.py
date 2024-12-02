@@ -4,9 +4,8 @@ from app.models import CrimeReport
 from datetime import datetime
 
 def load_crime_data(file_path, from_api=False):
-    """Function to load crime data from a CSV file into the database."""
+    # Function to load crime data from a CSV file into the database
     data_source = "API" if from_api else "Backup CSV"
-    print(f"Data Source: {data_source}")
 
     # Load the CSV file using pandas
     data = pd.read_csv(file_path)
