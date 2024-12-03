@@ -236,13 +236,13 @@ button, .btn {
 
 .btn-danger {
     background-color: #dc3545;
+    border-color: #dc3545;
     color: white;
-    border: none;
-    transition: background-color 0.3s ease;
 }
 
 .btn-danger:hover {
     background-color: #c82333;
+    border-color: #bd2130;
 }
 
 .modal-backdrop {

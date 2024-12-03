@@ -415,10 +415,16 @@ def debug_crime_types():
 @login_required
 def blog_page():
     if request.method == 'POST':
+        # Validate the presence of required fields
         title = request.form.get('title')
         location = request.form.get('location')
         description = request.form.get('description')
         crime_type = request.form.get('crime_type')
+
+        # Ensure all fields are provided
+        if not title or not location or not description or not crime_type:
+            flash("All fields are required to create a new post.", "danger")
+            return redirect(url_for('blog.blog_page'))
 
         # Create a new blog post
         new_post = BlogPost(
@@ -431,17 +437,26 @@ def blog_page():
         db.session.add(new_post)
         db.session.commit()
 
+        flash("New post created successfully!", "success")
         return redirect(url_for('blog.blog_page'))
 
     # Fetch posts based on crime type filter
     crime_filter = request.args.get('crime_type')
-    if crime_filter:
-        posts = BlogPost.query.filter_by(crime_type=crime_filter).all()
-    else:
-        posts = BlogPost.query.all()
+    posts = BlogPost.query.filter_by(crime_type=crime_filter).all() if crime_filter else BlogPost.query.all()
 
-    print(f"Posts: {posts}")  # Debugging: Check if posts are being retrieved
-    return render_template('blog.html', posts=posts)
+    # Prepare posts with author username
+    posts_with_usernames = [
+        {
+            'id': post.id,
+            'title': post.title,
+            'location': post.location,
+            'description': post.description,
+            'crime_type': post.crime_type,
+            'username': post.author.username if post.author else "Unknown Author"
+        }
+        for post in posts
+    ]
+    return render_template('blog.html', posts=posts_with_usernames)
 
 @blog.route('/api/blog-posts', methods=['GET'])
 def get_blog_posts():
@@ -466,3 +481,19 @@ def get_blog_posts():
         for post in posts
     ]
     return jsonify(posts_data)
+
+@blog.route('/delete_post/<int:post_id>', methods=['POST'])
+@login_required
+def delete_post(post_id):
+    post = BlogPost.query.get_or_404(post_id)
+
+    # Ensure the current user is the author of the post
+    if post.created_by != current_user.id:
+        flash("You don't have permission to delete this post.", "danger")
+        return redirect(url_for('blog.blog_page'))
+
+    # Delete the post
+    db.session.delete(post)
+    db.session.commit()
+    flash("Post deleted successfully.", "success")
+    return redirect(url_for('blog.blog_page'))
