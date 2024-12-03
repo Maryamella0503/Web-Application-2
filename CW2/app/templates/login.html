@@ -7,7 +7,7 @@
 
                 <div class="col-lg-6 col-md-8 col-sm-10"> 
                     <div class="card shadow-lg p-5 rounded" style="max-width: 600px; margin: auto;">
-                        <h1 class="text-center mb-4" style="font-size: 2.5rem; color: #80deea;">Login</h1>
+                        <h1 class="text-center mb-4" style="font-size: 2.5rem; color: #4ca0ba;">Login</h1>
 
                         <form method="POST" action="{{ url_for('auth.login') }}">
                             <div class="mb-4">
@@ -20,17 +20,17 @@
                                 <input type="password" class="form-control shadow-sm" id="password" name="password" placeholder="Enter your password" required>
                             </div>
 
-                            <button type="submit" class="btn btn-primary w-100" style="font-size: 1.25rem; padding: 12px;">Log In</button>
+                            <button type="submit" class="btn btn-primary w-100" style="font-size: 1.25rem; padding: 12px; color: #ffffff;">Log In</button>
                         </form>
                         
                         <div class="text-center mt-3">
-                            <p style="color: #000000; font-size: 1rem;">
-                                Forgot your password? <a href="{{ url_for('auth.reset_password') }}" style="color: #80deea; text-decoration: underline;">Reset it here.</a>
-                            </p>
+                            <h3 style="color: #000000; font-size: 1.1rem;">
+                                Forgot your password? <a href="{{ url_for('auth.reset_password') }}" style="color: #2e6e81; text-decoration: underline;">Reset it here.</a>
+                            </h3>
                         </div>
 
                         <div class="text-center mt-4">
-                            <p style="color: #000000; font-size: 1rem;">Don't have an account? <a href="{{ url_for('auth.register') }}" style="color: #80deea; text-decoration: underline;">Register here.</a></p>
+                            <h3 style="color: #000000; font-size: 1.1rem;">Don't have an account? <a href="{{ url_for('auth.register') }}" style="color: #2e6e81; text-decoration: underline;">Register here.</a></>
                         </div>
                     </div>
                 </div>
