@@ -54,7 +54,8 @@
                             class="btn btn-primary"
                             data-bs-toggle="modal"
                             data-bs-target="#postModal"
-                            onclick="showPostDetails('{{ post.title }}', '{{ post.location }}', '{{ post.crime_type }}', '{{ post.description }}')">
+                            onclick="showPostDetails('{{ post.title | escape | safe }}', '{{ post.location | escape | safe }}', '{{ post.crime_type | escape | safe }}', '{{ post.description | escape | safe }}', '{{ post.username | escape | safe }}')">
+                            View More
                         </button>
                     </div>
                 </div>
@@ -134,12 +135,12 @@
 
 <script>
         function showPostDetails(title, location, crimeType, description, author) {
-        document.getElementById("modalTitle").innerText = title || "No Title Provided";
-        document.getElementById("modalLocation").innerText = location || "No Location Provided";
-        document.getElementById("modalCrimeType").innerText = crimeType || "No Crime Type Provided";
-        document.getElementById("modalDescription").innerText = description || "No Description Provided";
-        document.getElementById("modalAuthor").innerText = author || "Unknown Author";
-    }
+            document.getElementById("modalTitle").innerText = title || "No Title Provided";
+            document.getElementById("modalLocation").innerText = location || "No Location Provided";
+            document.getElementById("modalCrimeType").innerText = crimeType || "No Crime Type Provided";
+            document.getElementById("modalDescription").innerText = description || "No Description Provided";
+            document.getElementById("modalAuthor").innerText = author || "Unknown Author";
+        }
         const tipsData = {
         "Theft": [
             "Keep your belongings secure and avoid displaying valuables.",
@@ -223,40 +224,38 @@ function showTipsAndPosts() {
     }
 
     fetch(`/api/blog-posts?crime_type=${selectedCrime}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Failed to fetch posts");
-            }
-            return response.json();
-        })
-        .then(posts => {
-            const blogPostsContainer = document.getElementById("blog-posts");
-            blogPostsContainer.innerHTML = "";
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Failed to fetch posts");
+        }
+        return response.json();
+    })
+    .then(posts => {
+        const blogPostsContainer = document.getElementById("blog-posts");
+        blogPostsContainer.innerHTML = "";
 
-            if (posts.length > 0) {
-                posts.forEach(post => {
-                    const postCard = 
-                        <div class="col">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title">${post.title || "No Title Provided"}</h5>
-                                    <p class="card-text"><i class="fas fa-map-marker-alt"></i> <strong>Location:</strong> ${post.location || "No Location Provided"}</p>
-                                    <p class="card-text"><i class="fas fa-exclamation-circle"></i> <strong>Crime Type:</strong> ${post.crime_type || "No Crime Type Provided"}</p>
-                                    <p class="card-text">${post.description || "No Description Provided"}</p>
-                                    <p class="card-text"><small>Posted by ${post.author || "Unknown"}</small></p>
-                                </div>
+        if (posts.length > 0) {
+            posts.forEach(post => {
+                const postCard = `
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">${post.title || "No Title Provided"}</h5>
+                                <p class="card-text"><i class="fas fa-map-marker-alt"></i> <strong>Location:</strong> ${post.location || "No Location Provided"}</p>
+                                <p class="card-text"><i class="fas fa-exclamation-circle"></i> <strong>Crime Type:</strong> ${post.crime_type || "No Crime Type Provided"}</p>
+                                <p class="card-text">${post.description || "No Description Provided"}</p>
                             </div>
-                        </div>;
-                    blogPostsContainer.insertAdjacentHTML("beforeend", postCard);
-                });
-            } else {
-                blogPostsContainer.innerHTML = "<p class='text-muted'>No blog posts available for this crime type.</p>";
-            }
-        })
-        .catch(error => {
-            console.error("Error fetching posts:", error);
-        });
-}
+                        </div>
+                    </div>`;
+                blogPostsContainer.insertAdjacentHTML("beforeend", postCard);
+            });
+        } else {
+            blogPostsContainer.innerHTML = "<p class='text-muted'>No blog posts available for this crime type.</p>";
+        }
+    })
+    .catch(error => {
+        console.error("Error fetching posts:", error);
+    });
 
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll('.modal').forEach(modal => {
@@ -284,6 +283,7 @@ function toggleOtherCrimeInput() {
     } else {
         otherCrimeTypeContainer.style.display = "none";
     }
+}
 }
 </script>
 {% endblock %}
