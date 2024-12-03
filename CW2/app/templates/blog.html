@@ -54,8 +54,7 @@
                             class="btn btn-primary"
                             data-bs-toggle="modal"
                             data-bs-target="#postModal"
-                            onclick="showPostDetails('{{ post.title }}', '{{ post.location }}', '{{ post.crime_type }}', '{{ post.description }}', '{{ post.author.username}}')">
-                            View More
+                            onclick="showPostDetails('{{ post.title }}', '{{ post.location }}', '{{ post.crime_type }}', '{{ post.description }}')">
                         </button>
                     </div>
                 </div>
@@ -83,9 +82,6 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <form id="deletePostForm" method="POST">
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </form>
             </div>
         </div>
     </div>
@@ -204,7 +200,6 @@
             "Support local community initiatives to address and reduce drug-related crimes."
         ]
     };
-
 function showTipsAndPosts() {
     const selectedCrime = document.getElementById("crime_type").value;
 
@@ -240,7 +235,7 @@ function showTipsAndPosts() {
 
             if (posts.length > 0) {
                 posts.forEach(post => {
-                    const postCard = `
+                    const postCard = 
                         <div class="col">
                             <div class="card h-100">
                                 <div class="card-body">
@@ -251,7 +246,7 @@ function showTipsAndPosts() {
                                     <p class="card-text"><small>Posted by ${post.author || "Unknown"}</small></p>
                                 </div>
                             </div>
-                        </div>`;
+                        </div>;
                     blogPostsContainer.insertAdjacentHTML("beforeend", postCard);
                 });
             } else {
@@ -290,23 +285,5 @@ function toggleOtherCrimeInput() {
         otherCrimeTypeContainer.style.display = "none";
     }
 }
-
-function showPostDetails(title, location, crimeType, description, author, postId) {
-    document.getElementById("modalTitle").innerText = title || "No Title Provided";
-    document.getElementById("modalLocation").innerText = location || "No Location Provided";
-    document.getElementById("modalCrimeType").innerText = crimeType || "No Crime Type Provided";
-    document.getElementById("modalDescription").innerText = description || "No Description Provided";
-    document.getElementById("modalAuthor").innerText = author || "Unknown Author";
-
-    // Check if postId is valid and update the delete form action
-    const deleteForm = document.getElementById("deletePostForm");
-    if (postId) {
-        deleteForm.action = `/delete_post/${postId}`;
-    } else {
-        deleteForm.action = "#"; // Fallback action if postId is missing
-        console.error("Post ID is undefined. Cannot set delete form action.");
-    }
-}
-
 </script>
 {% endblock %}
