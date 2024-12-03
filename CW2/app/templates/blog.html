@@ -57,9 +57,6 @@
                             onclick="showPostDetails('{{ post.title }}', '{{ post.location }}', '{{ post.crime_type }}', '{{ post.description }}', '{{ post.author.username}}')">
                             View More
                         </button>
-                        <form method="POST" action="{{ url_for('blog.delete_post', post_id=post.id) }}">
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                        </form>
                     </div>
                 </div>
             </div>
@@ -85,7 +82,6 @@
                 <p><small>Posted by <span id="modalAuthor"></span></small></p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <form id="deletePostForm" method="POST">
                     <button type="submit" class="btn btn-danger">Delete</button>
@@ -208,7 +204,7 @@
             "Support local community initiatives to address and reduce drug-related crimes."
         ]
     };
-    
+
 function showTipsAndPosts() {
     const selectedCrime = document.getElementById("crime_type").value;
 
@@ -302,9 +298,14 @@ function showPostDetails(title, location, crimeType, description, author, postId
     document.getElementById("modalDescription").innerText = description || "No Description Provided";
     document.getElementById("modalAuthor").innerText = author || "Unknown Author";
 
-    // Set action for delete form
+    // Check if postId is valid and update the delete form action
     const deleteForm = document.getElementById("deletePostForm");
-    deleteForm.action = `/delete_post/${postId}`;
+    if (postId) {
+        deleteForm.action = `/delete_post/${postId}`;
+    } else {
+        deleteForm.action = "#"; // Fallback action if postId is missing
+        console.error("Post ID is undefined. Cannot set delete form action.");
+    }
 }
 
 </script>

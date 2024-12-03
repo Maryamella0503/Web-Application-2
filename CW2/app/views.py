@@ -206,16 +206,17 @@ def update_preferences():
 @blog.route('/delete_post/<int:post_id>', methods=['POST'])
 @login_required
 def delete_post(post_id):
-    post = BlogPost.query.get_or_404(post_id)
+    post = BlogPost.query.get(post_id)
+    if post:
+        if post.created_by == current_user.id:  # Ensure the user owns the post
+            db.session.delete(post)
+            db.session.commit()
+            flash('Post deleted successfully!', 'success')
+        else:
+            flash('You do not have permission to delete this post.', 'error')
+    else:
+        flash('Post not found.', 'error')
 
-    # Ensure only the creator can delete their post
-    if post.created_by != current_user.id:
-        flash('You do not have permission to delete this post.', 'error')
-        return redirect(url_for('blog.blog_page'))
-
-    db.session.delete(post)
-    db.session.commit()
-    flash('Post deleted successfully!', 'success')
     return redirect(url_for('blog.blog_page'))
     
 def send_crime_summary():
