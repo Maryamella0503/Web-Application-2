@@ -148,16 +148,6 @@ def login():
     
     return render_template('login.html')
 
-@auth.route('/login', methods=['GET', 'POST'])
-def login():
-    if current_user.is_authenticated:
-        return redirect(url_for('dashboard'))
-    if request.method == 'POST':
-        # Login logic
-        pass
-    return render_template('login.html')
-    
-
 @views.route('/send-emergency-alert', methods=['POST'])
 @login_required
 def send_emergency_alert():
@@ -202,57 +192,7 @@ def update_preferences():
     else:
         flash('No preferences selected. Please choose at least one.', 'error')
     return redirect(url_for('views.dashboard'))
-
-def send_crime_alert_email(user_email, crime_details):
-    msg = Message(
-        "Crime Alert!",
-        sender="your-email@example.com",
-        recipients=[user_email]
-    )
-    msg.body = f"A crime has been reported near your location: {crime_details}"
-    mail.send(msg)
     
-def check_for_crime_alerts():
-    app = create_app()  # Create the app instance
-    with app.app_context():  # Use the app context
-        users = User.query.all()
-        crimes = CrimeReport.query.all()
-
-        for user in users:
-            if not user.bookmarked_locations:
-                continue  # Skip users without bookmarked locations
-            
-            user_coords = tuple(map(float, user.bookmarked_locations.split(',')))
-            preferences = user.crime_preferences.split(',') if user.crime_preferences else []
-
-            for crime in crimes:
-                if crime.title not in preferences:
-                    continue  # Skip crimes not in user's preferences
-                
-                crime_coords = (crime.latitude, crime.longitude)
-                distance = geodesic(user_coords, crime_coords).km
-
-                if distance <= user.notification_radius:
-                    crime_details = (
-                        f"{crime.title} reported at {crime.location} on {crime.date_reported.strftime('%Y-%m-%d')}"
-                    )
-                    send_crime_alert_email(user.email, crime_details)
-
-scheduler = BackgroundScheduler()
-scheduler.add_job(check_for_crime_alerts, 'interval', minutes=5)
-scheduler.start()
-
-def send_crime_summary():
-    users = User.query.filter_by(summary_preference='daily').all()
-    today = datetime.now().date()
-    crimes_today = CrimeReport.query.filter(CrimeReport.date == today).all()
-
-    for user in users:
-        crime_details = "\n".join([f"{crime.title}: {crime.description}" for crime in crimes_today])
-        send_crime_alert_email(user.email, crime_details)
-
-scheduler.add_job(send_crime_summary, 'cron', hour=8)
-
 # Add at the bottom of views.py
 import logging
 from app import create_app
@@ -423,7 +363,7 @@ def blog_page():
 
         # Ensure all fields are provided
         if not title or not location or not description or not crime_type:
-            flash("All fields are required to create a new post.", "danger")
+            flash("Unable to delete post", "danger")
             return redirect(url_for('blog.blog_page'))
 
         # Create a new blog post
