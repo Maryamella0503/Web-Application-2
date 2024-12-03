@@ -482,17 +482,15 @@ def get_blog_posts():
     ]
     return jsonify(posts_data)
 
-@blog.route('/delete_post/<int:post_id>', methods=['POST'])
+@blog.route('/delete_post/<int:post_id>', methods=['POST', 'GET'])
 @login_required
 def delete_post(post_id):
     post = BlogPost.query.get_or_404(post_id)
 
-    # Ensure the current user is the author of the post
     if post.created_by != current_user.id:
         flash("You don't have permission to delete this post.", "danger")
         return redirect(url_for('blog.blog_page'))
 
-    # Delete the post
     db.session.delete(post)
     db.session.commit()
     flash("Post deleted successfully.", "success")
