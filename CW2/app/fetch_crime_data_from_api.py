@@ -37,7 +37,6 @@ def fetch_crime_data_from_api():
             )
             db.session.add(new_report)
 
-        # Commit the changes to the database
         db.session.commit()
         return True
 

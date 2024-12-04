@@ -15,7 +15,7 @@ def seed_database():
             if not CrimeType.query.filter_by(name=crime_name).first():
                 db.session.add(CrimeType(name=crime_name))
 
-        # Seed SafetyTip
+        # Seed the SafetyTip table with tips for each crime category
         tips_data = {
             "Theft": [
                 "Keep your belongings secure and avoid displaying valuables.",
@@ -86,5 +86,6 @@ def seed_database():
         
         db.session.commit()
 
+# Run the seeding script if executed directly
 if __name__ == "__main__":
     seed_database()

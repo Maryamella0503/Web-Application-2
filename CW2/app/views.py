@@ -2,14 +2,13 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request,
 from flask_login import login_user, logout_user, login_required, current_user
 from app.models import User, CrimeReport, CrimeType, SafetyTip, BlogPost
 from app.forms import RegistrationForm, LoginForm
-from app import db, mail, create_app
+from app import db
 import os
 from flask import current_app
 from flask_mail import Message
 from app.analytics import predict_crime_hotspots
 from app.populate_crime_data import load_crime_data
 from werkzeug.security import generate_password_hash, check_password_hash
-from apscheduler.schedulers.background import BackgroundScheduler
 from geopy.distance import geodesic
 from datetime import datetime
 from app.populate_crime_data import load_crime_data
@@ -148,19 +147,11 @@ def login():
     
     return render_template('login.html')
 
-@views.route('/send-emergency-alert', methods=['POST'])
-@login_required
-def send_emergency_alert():
-    user_location = request.form.get('user_location')
-    message = f"Emergency alert from {current_user.email}. Last known location: {user_location}"
-    send_crime_alert_email(current_user.emergency_contact, message)
-    return "Alert sent!"
-
 @views.route('/dashboard')
 @login_required
 def dashboard():
     # Ensure crime_preferences is not None
-    crime_preferences = current_user.crime_preferences or ""  # Default to an empty string
+    crime_preferences = current_user.crime_preferences or ""
     recommendations = get_safety_recommendations(current_user)
 
     return render_template(
@@ -172,6 +163,7 @@ def dashboard():
 @views.route('/update_user_info', methods=['POST'])
 @login_required
 def update_user_info():
+    # Update user information from form inputs
     current_user.phone_number = request.form.get('phone_number')
     current_user.home_address = request.form.get('home_address')
     current_user.work_address = request.form.get('work_address')
@@ -193,72 +185,12 @@ def update_preferences():
         flash('No preferences selected. Please choose at least one.', 'error')
     return redirect(url_for('views.dashboard'))
     
-# Add at the bottom of views.py
 import logging
 from app import create_app
 from geopy.distance import geodesic
 from app.models import User, CrimeReport
-from app.email import send_crime_alert_email
 
 logging.basicConfig(level=logging.INFO)
-
-def check_for_crime_alerts():
-    logging.info("Starting alert check...")
-    with current_app.app_context():
-        users = User.query.all()
-        crimes = CrimeReport.query.all()
-        for user in users:
-            logging.info(f"Checking for user: {user.email}")
-            if user.bookmarked_locations:
-                user_coords = tuple(map(float, user.bookmarked_locations.split(',')))
-                for crime in crimes:
-                    crime_coords = (crime.latitude, crime.longitude)
-                    distance = geodesic(user_coords, crime_coords).km
-                    logging.info(f"Distance to crime: {distance} km")
-                    if distance <= user.notification_radius:
-                        logging.info(f"Alert triggered for {user.email}")
-                        send_crime_alert_email(
-                            user.email,
-                            f"{crime.title} reported at {crime.location} on {crime.date_reported.strftime('%Y-%m-%d')}"
-                        )
-
-@views.route('/test-alerts')
-def test_alerts():
-    from app.models import User, CrimeReport
-
-    # Create a test user
-    test_user = User(
-        username="Test User",
-        email="testuser@example.com",
-        bookmarked_locations="51.505,-0.09",  # Mock coordinates
-        notification_radius=1  # 1 km radius
-    )
-
-    # Mock crimes data
-    test_crime = CrimeReport(
-        latitude=51.505,
-        longitude=-0.09,
-        title="Mock Crime",
-        description="This is a test crime alert",
-        location="Mock Location",
-        date_reported=datetime.now()
-    )
-
-    # Simulate alert logic
-    user_coords = tuple(map(float, test_user.bookmarked_locations.split(',')))
-    crime_coords = (test_crime.latitude, test_crime.longitude)
-    distance = geodesic(user_coords, crime_coords).km
-
-    if distance <= test_user.notification_radius:
-        alert_message = f"ALERT: {test_crime.title} at {test_crime.location}, {distance} km away."
-        return jsonify({"alert": alert_message})
-
-    return jsonify({"message": "No alerts triggered."})
-
-@views.route('/trigger-alerts')
-def trigger_alerts():
-    check_for_crime_alerts()
-    return "Alerts triggered!"
 
 def get_safety_recommendations(user):
     # Check if the user has bookmarked locations
@@ -346,11 +278,6 @@ def populate_crime_types():
             db.session.add(CrimeType(name=crime_name))
     db.session.commit()
 
-@views.route('/debug-crime-types')
-def debug_crime_types():
-    crime_types = CrimeType.query.all()
-    return jsonify([crime_type.name for crime_type in crime_types])
-
 @blog.route('/blog', methods=['GET', 'POST'])
 @login_required
 def blog_page():
@@ -400,7 +327,7 @@ def blog_page():
 
 @blog.route('/api/blog-posts', methods=['GET'])
 def get_blog_posts():
-    crime_type = request.args.get('crime_type')  # Get crime_type from query params
+    crime_type = request.args.get('crime_type')  # Get crime_type from query
 
     if crime_type:
         posts = BlogPost.query.filter_by(crime_type=crime_type).all()  # Filter posts
@@ -422,6 +349,7 @@ def get_blog_posts():
     ]
     return jsonify(posts_data)
 
+# Route to delete a blog post
 @blog.route('/delete_post/<int:post_id>', methods=['POST', 'GET'])
 @login_required
 def delete_post(post_id):

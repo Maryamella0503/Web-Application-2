@@ -3,8 +3,8 @@ from app import db
 from app.models import CrimeReport
 from datetime import datetime
 
+# Function to load crime data from a CSV file into the database
 def load_crime_data(file_path, from_api=False):
-    # Function to load crime data from a CSV file into the database
     data_source = "API" if from_api else "Backup CSV"
 
     # Load the CSV file using pandas
@@ -29,5 +29,4 @@ def load_crime_data(file_path, from_api=False):
         )
         db.session.add(crime_report)
 
-    # Commit all changes to the database
     db.session.commit()

@@ -7,6 +7,7 @@ from app.forms import LoginForm
 
 auth = Blueprint('auth', __name__)
 
+# Registration route to handle user sign-up
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -37,6 +38,7 @@ def register():
 
     return render_template('register.html')
 
+# Login route to handle user authentication
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -53,6 +55,7 @@ def login():
 
     return render_template('login.html')
 
+# Logout route to handle user logout
 @auth.route('/logout')
 @login_required
 def logout():
@@ -60,11 +63,13 @@ def logout():
     flash('You have been logged out.', category='success')
     return redirect(url_for('auth.login'))
 
+# Dashboard route for logged-in users
 @auth.route('/dashboard')
 @login_required
 def dashboard():
     return render_template('dashboard.html', user=current_user)
 
+# Route to handle password changes for logged-in users
 @auth.route('/change-password', methods=['POST'])
 @login_required
 def change_password():
@@ -83,7 +88,7 @@ def change_password():
     
     return redirect(url_for('views.dashboard'))
 
-
+# Route to handle password reset for users who forget their password
 @auth.route('/reset-password', methods=['GET', 'POST'])
 def reset_password():
     if request.method == 'POST':

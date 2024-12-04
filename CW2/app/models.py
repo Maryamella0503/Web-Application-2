@@ -3,12 +3,13 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from datetime import datetime
 
-# Many-to-Many Relationship Table
+# This table creates a many-to-many relationship between users and crime reports
 user_crime = db.Table('user_crime',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
     db.Column('crime_id', db.Integer, db.ForeignKey('crime_report.id'))
 )
 
+# User Model
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), nullable=False, unique=True)
@@ -39,11 +40,13 @@ class CrimeReport(db.Model):
     latitude = db.Column(db.Float, nullable=True)
     longitude = db.Column(db.Float, nullable=True)
 
+# CrimeType Model
 class CrimeType(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=True, nullable=False)
     safety_tips = db.relationship('SafetyTip', backref='crime_type', lazy=True)
 
+# SafetyTip Model
 class SafetyTip(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(255), nullable=False)
@@ -51,7 +54,8 @@ class SafetyTip(db.Model):
 
     def __repr__(self):
         return f"<SafetyTip {self.content}>"
-    
+
+# BlogPost Model
 class BlogPost(db.Model):
     __tablename__ = 'blog_post'
     id = db.Column(db.Integer, primary_key=True)
