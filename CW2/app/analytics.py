@@ -5,14 +5,15 @@ from datetime import datetime
 import numpy as np
 from sklearn.cluster import KMeans
 
+
 # Function to load crime data from a CSV file into the database
 def load_crime_data(file_path):
     data = pd.read_csv(file_path)
 
-    # Iterate over each row and create CrimeReport objects to add to the database
+    # Iterate each row and create CrimeReport objects to add to the database
     for index, row in data.iterrows():
         # Use 'Last Outcome Category' as the description or set a default value
-        description = row['Last Outcome Category'] if pd.notna(row['Last Outcome Category']) else 'No description available'
+        description = row['Last Outcome Category'] if pd.notna(row['Last Outcome Category']) else 'No description available'  # noqa
 
         # Create a new CrimeReport object
         crime_report = CrimeReport(
@@ -27,11 +28,12 @@ def load_crime_data(file_path):
 
     db.session.commit()
 
+
 # Function to predict crime hotspots using clustering
 def predict_crime_hotspots():
     reports = CrimeReport.query.all()
 
-    # Extract locations from the reports (Assuming location format is 'latitude,longitude')
+    # Extract locations from the reports (format is 'latitude,longitude')
     coordinates = []
     for report in reports:
         try:

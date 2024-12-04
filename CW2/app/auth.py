@@ -3,9 +3,9 @@ from flask_login import login_user, logout_user, login_required, current_user
 from app.models import User
 from app import db
 from werkzeug.security import check_password_hash, generate_password_hash
-from app.forms import LoginForm
 
 auth = Blueprint('auth', __name__)
+
 
 # Registration route to handle user sign-up
 @auth.route('/register', methods=['GET', 'POST'])
@@ -19,7 +19,7 @@ def register():
         if user:
             flash('Email already exists.', category='error')
         elif len(username) < 2:
-            flash('Username must be greater than 1 character.', category='error')
+            flash('Username must be greater than 1 character', category='error')  # noqa
         elif len(password) < 6:
             flash('Password must be at least 6 characters.', category='error')
         elif len(email) < 4:
@@ -28,7 +28,7 @@ def register():
             new_user = User(
                 username=username,
                 email=email,
-                password=generate_password_hash(password, method='pbkdf2:sha256')
+                password=generate_password_hash(password, method='pbkdf2:sha256') # noqa
             )
             db.session.add(new_user)
             db.session.commit()
@@ -37,6 +37,7 @@ def register():
             return redirect(url_for('views.dashboard'))
 
     return render_template('register.html')
+
 
 # Login route to handle user authentication
 @auth.route('/login', methods=['GET', 'POST'])
@@ -55,6 +56,7 @@ def login():
 
     return render_template('login.html')
 
+
 # Logout route to handle user logout
 @auth.route('/logout')
 @login_required
@@ -63,11 +65,13 @@ def logout():
     flash('You have been logged out.', category='success')
     return redirect(url_for('auth.login'))
 
+
 # Dashboard route for logged-in users
 @auth.route('/dashboard')
 @login_required
 def dashboard():
     return render_template('dashboard.html', user=current_user)
+
 
 # Route to handle password changes for logged-in users
 @auth.route('/change-password', methods=['POST'])
@@ -82,11 +86,12 @@ def change_password():
     elif new_password != confirm_password:
         flash('New passwords do not match.', category='error')
     else:
-        current_user.password = generate_password_hash(new_password, method='sha256')
+        current_user.password = generate_password_hash(new_password, method='sha256') # noqa
         db.session.commit()
         flash('Password changed successfully!', category='success')
-    
+
     return redirect(url_for('views.dashboard'))
+
 
 # Route to handle password reset for users who forget their password
 @auth.route('/reset-password', methods=['GET', 'POST'])
@@ -108,9 +113,9 @@ def reset_password():
             return redirect(url_for('auth.reset_password'))
 
         # Update the user's password
-        user.password = generate_password_hash(new_password, method='pbkdf2:sha256')
+        user.password = generate_password_hash(new_password, method='pbkdf2:sha256')  # noqa
         db.session.commit()
-        flash('Your password has been successfully reset. You can now log in.', 'success')
+        flash('Your password has been successfully reset. You can now log in.', 'success') # noqa
         return redirect(url_for('auth.login'))
 
     return render_template('reset_pass.html')

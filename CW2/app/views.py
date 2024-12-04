@@ -1,22 +1,18 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify
-from flask_login import login_user, logout_user, login_required, current_user
-from app.models import User, CrimeReport, CrimeType, SafetyTip, BlogPost
-from app.forms import RegistrationForm, LoginForm
+from flask import Blueprint, render_template, redirect
+from flask import url_for, flash, request, jsonify
+from flask_login import login_user, login_required, current_user
+from app.models import User, CrimeReport, CrimeType, BlogPost
 from app import db
 import os
 from flask import current_app
-from flask_mail import Message
 from app.analytics import predict_crime_hotspots
-from app.populate_crime_data import load_crime_data
 from werkzeug.security import generate_password_hash, check_password_hash
-from geopy.distance import geodesic
-from datetime import datetime
-from app.populate_crime_data import load_crime_data
 from app.fetch_crime_data_from_api import fetch_crime_data_from_api
 
 views = Blueprint('views', __name__)
 auth = Blueprint('auth', __name__)
 blog = Blueprint('blog', __name__)
+
 
 @views.route('/')
 def home():
@@ -24,20 +20,19 @@ def home():
         # Attempt to fetch data from the API
         api_success = fetch_crime_data_from_api()
         data_source = "API" if api_success else "Backup CSV"
-    except Exception as e:
+    except Exception as e: # noqa
         api_success = False
         data_source = "Backup CSV"
 
     # Load from backup CSV here if needed
     if not api_success:
-        backup_csv_path = os.path.join(current_app.root_path, 'static', '2024-09-west-yorkshire-street.csv')
-        
+        backup_csv_path = os.path.join(current_app.root_path, 'static', '2024-09-west-yorkshire-street.csv') # noqa
     crimes = CrimeReport.query.all()
 
     # Filter crimes based on user preferences if logged in
     if current_user.is_authenticated and current_user.crime_preferences:
-        preferences = [pref.strip().lower() for pref in current_user.crime_preferences.split(',')]
-        crimes = [crime for crime in crimes if crime.title.strip().lower() in preferences]
+        preferences = [pref.strip().lower() for pref in current_user.crime_preferences.split(',')] # noqa
+        crimes = [crime for crime in crimes if crime.title.strip().lower() in preferences] # noqa
 
     crime_data = [
         {
@@ -58,6 +53,7 @@ def home():
         crime_data=crime_data
     )
 
+
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -68,7 +64,7 @@ def register():
 
         # Validate input
         if not username or len(username) < 2:
-            flash('Username must be greater than 1 character.', category='error')
+            flash('Username must be greater than 1 character', category='error') # noqa
             return render_template('register.html')
         if not email or len(email) < 4:
             flash('Email must be greater than 3 characters.', category='error')
@@ -95,18 +91,19 @@ def register():
             login_user(new_user)  # Log in the user
             flash('Account created successfully!', category='success')
             return redirect(url_for('views.home'))
-        except Exception as e:
+        except Exception as e: # noqa
             db.session.rollback()
-            flash('An error occurred during registration. Please try again.', category='error')
+            flash('An error occurred during registration. Please try again.', category='error') # noqa
             return render_template('register.html')
 
     # Render registration page
     return render_template('register.html')
 
+
 @views.route('/api/crime-data', methods=['GET'])
 @login_required
 def get_crime_data():
-    preferences = current_user.crime_preferences.split(',') if current_user.crime_preferences else []
+    preferences = current_user.crime_preferences.split(',') if current_user.crime_preferences else [] # noqa
 
     # Fetch crimes matching the user's preferences
     crimes = CrimeReport.query.filter(CrimeReport.title.in_(preferences)).all()
@@ -124,10 +121,12 @@ def get_crime_data():
     ]
     return jsonify(data)
 
+
 @views.route('/api/crime-hotspots', methods=['GET'])
 def get_crime_hotspots():
     hotspots = predict_crime_hotspots()
     return jsonify(hotspots)
+
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
@@ -135,7 +134,6 @@ def login():
         email = request.form.get('email')
         password = request.form.get('password')
         user = User.query.filter_by(email=email).first()
-        
         if user and check_password_hash(user.password, password):
             login_user(user)
             flash('Logged in successfully!', category='success')
@@ -144,21 +142,20 @@ def login():
             return redirect(url_for('views.home'))
         else:
             flash('Login failed. Check your credentials.', category='error')
-    
     return render_template('login.html')
+
 
 @views.route('/dashboard')
 @login_required
 def dashboard():
     # Ensure crime_preferences is not None
-    crime_preferences = current_user.crime_preferences or ""
-    recommendations = get_safety_recommendations(current_user)
+    crime_preferences = current_user.crime_preferences or "" # noqa
 
     return render_template(
         'dashboard.html',
         user=current_user,
-        recommendations=recommendations,
     )
+
 
 @views.route('/update_user_info', methods=['POST'])
 @login_required
@@ -172,10 +169,12 @@ def update_user_info():
     flash('Your information has been updated!', 'success')
     return redirect(url_for('views.dashboard'))
 
+
 @views.route('/update_preferences', methods=['POST'])
 @login_required
 def update_preferences():
-    preferences = request.form.getlist('crime_preferences')  # Extract selected preferences
+    # Extract crime preferences from the form
+    preferences = request.form.getlist('crime_preferences')
     if preferences:
         # Save preferences as a comma-separated string
         current_user.crime_preferences = ','.join(preferences)
@@ -184,64 +183,7 @@ def update_preferences():
     else:
         flash('No preferences selected. Please choose at least one.', 'error')
     return redirect(url_for('views.dashboard'))
-    
-import logging
-from app import create_app
-from geopy.distance import geodesic
-from app.models import User, CrimeReport
 
-logging.basicConfig(level=logging.INFO)
-
-def get_safety_recommendations(user):
-    # Check if the user has bookmarked locations
-    if not user.bookmarked_locations:
-        return ["No bookmarked locations found. Please add a location to receive safety recommendations."]
-
-    try:
-        user_coords = tuple(map(float, user.bookmarked_locations.split(',')))
-    except (ValueError, TypeError):
-        return ["Invalid bookmarked location format. Please update your location settings."]
-
-    crimes = CrimeReport.query.all()
-    crime_types = {}
-
-    for crime in crimes:
-        crime_coords = (crime.latitude, crime.longitude)
-        distance = geodesic(user_coords, crime_coords).km
-        if distance <= user.notification_radius:
-            crime_types[crime.title] = crime_types.get(crime.title, 0) + 1
-
-    recommendations = []
-    if 'Anti-social behaviour' in crime_types:
-        recommendations.append("Avoid crowded areas and report any disturbances to the authorities.")
-    if 'Criminal damage and arson' in crime_types:
-        recommendations.append("Secure your property and ensure fire alarms are functional.")
-    if 'Violence and sexual offences' in crime_types:
-        recommendations.append("Avoid poorly lit areas and consider carrying personal safety devices.")
-    if 'Other crime' in crime_types:
-        recommendations.append("Be cautious and report any suspicious activity.")
-    if 'Public order' in crime_types:
-        recommendations.append("Stay away from large gatherings or protests that could escalate.")
-    if 'Vehicle crime' in crime_types:
-        recommendations.append("Park in well-lit areas and use anti-theft devices for your vehicle.")
-    if 'Shoplifting' in crime_types:
-        recommendations.append("Be vigilant while shopping and report any suspicious activities.")
-    if 'Burglary' in crime_types:
-        recommendations.append("Ensure your doors and windows are locked and consider installing security cameras.")
-    if 'Other theft' in crime_types:
-        recommendations.append("Keep your belongings secure and avoid displaying valuables in public.")
-    if 'Bicycle theft' in crime_types:
-        recommendations.append("Use sturdy locks and park your bicycle in monitored areas.")
-    if 'Drugs' in crime_types:
-        recommendations.append("Report any drug-related activity to the authorities immediately.")
-    if 'Robbery' in crime_types:
-        recommendations.append("Avoid carrying large sums of money and remain alert in public places.")
-    if 'Theft from the person' in crime_types:
-        recommendations.append("Keep your belongings close and avoid distractions while in public.")
-    if 'Possession of weapons' in crime_types:
-        recommendations.append("Stay alert and report any suspicious activity to the authorities.")
-
-    return recommendations or ["No significant crimes found near your location."]
 
 @views.route('/safety-tips', methods=['GET', 'POST'])
 @login_required
@@ -254,11 +196,12 @@ def safety_tips():
     tips = []
 
     if selected_crime_type:
-        crime_type = CrimeType.query.filter_by(name=selected_crime_type).first()
+        crime_type = CrimeType.query.filter_by(name=selected_crime_type).first() # noqa
         if crime_type:
-            tips = crime_type.safety_tips  # Fetch safety tips linked to the crime type
+            tips = crime_type.safety_tips
         else:
-            print(f"No matching crime type found for: {selected_crime_type}")  # Debugging output
+            # Debugging output
+            print(f"No matching crime type found for: {selected_crime_type}")
 
     return render_template(
         'safety_tips.html',
@@ -268,15 +211,18 @@ def safety_tips():
         tips=tips
     )
 
+
 def populate_crime_types():
     sample_types = [
-        "Robbery", "Assault", "Burglary", "Vehicle Crime", "Shoplifting", 
-        "Antisocial behaviour", "Arson", "Public Order", "Drugs", "Possession of weapons"
+        "Robbery", "Assault", "Burglary", "Vehicle Crime", "Shoplifting",
+        "Antisocial behaviour", "Arson", "Public Order", "Drugs",
+        "Possession of weapons"
     ]
     for crime_name in sample_types:
         if not CrimeType.query.filter_by(name=crime_name).first():
             db.session.add(CrimeType(name=crime_name))
     db.session.commit()
+
 
 @blog.route('/blog', methods=['GET', 'POST'])
 @login_required
@@ -309,7 +255,7 @@ def blog_page():
 
     # Fetch posts based on crime type filter
     crime_filter = request.args.get('crime_type')
-    posts = BlogPost.query.filter_by(crime_type=crime_filter).all() if crime_filter else BlogPost.query.all()
+    posts = BlogPost.query.filter_by(crime_type=crime_filter).all() if crime_filter else BlogPost.query.all() # noqa
 
     # Prepare posts with author username
     posts_with_usernames = [
@@ -319,18 +265,20 @@ def blog_page():
             'location': post.location,
             'description': post.description,
             'crime_type': post.crime_type,
-            'username': post.author.username if post.author else "Unknown Author"
+            'username': post.author.username if post.author else "Unknown Author" # noqa
         }
         for post in posts
     ]
     return render_template('blog.html', posts=posts_with_usernames)
+
 
 @blog.route('/api/blog-posts', methods=['GET'])
 def get_blog_posts():
     crime_type = request.args.get('crime_type')  # Get crime_type from query
 
     if crime_type:
-        posts = BlogPost.query.filter_by(crime_type=crime_type).all()  # Filter posts
+        # Filter posts by crime type
+        posts = BlogPost.query.filter_by(crime_type=crime_type).all()
     else:
         posts = BlogPost.query.all()
 
@@ -348,6 +296,7 @@ def get_blog_posts():
         for post in posts
     ]
     return jsonify(posts_data)
+
 
 # Route to delete a blog post
 @blog.route('/delete_post/<int:post_id>', methods=['POST', 'GET'])

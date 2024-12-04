@@ -4,6 +4,7 @@ from app.models import CrimeReport
 # Initialize the Blueprint
 api = Blueprint('api', __name__)
 
+
 # Fetch all crime reports from the database
 @api.route('/api/crime-data', methods=['GET'])
 def get_crime_data():
